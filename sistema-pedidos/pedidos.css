@@ -844,26 +844,35 @@ textarea.form-control {
 }
 
 .tutorial-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
     margin-top: 1rem;
 }
 
-@media (min-width: 768px) {
-    .tutorial-list {
-        grid-template-columns: repeat(5, 1fr);
-    }
+.tutorial-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+    padding: 0.8rem 1rem;
+    background-color: var(--soft-gray);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(31, 18, 11, 0.02);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.tutorial-item {
-    text-align: center;
-    padding: 0.5rem;
+.tutorial-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(184, 92, 44, 0.12);
+    background-color: var(--cream);
+    box-shadow: var(--shadow-sm);
 }
 
 .tutorial-step-number {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background-color: var(--cream);
     color: var(--burnt-orange);
@@ -871,14 +880,53 @@ textarea.form-control {
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    margin: 0 auto 0.6rem;
-    border: 1px solid rgba(184, 92, 44, 0.2);
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    border: 1px solid rgba(184, 92, 44, 0.25);
+    transition: all 0.2s ease;
+}
+
+.tutorial-item:hover .tutorial-step-number {
+    background-color: var(--burnt-orange);
+    color: var(--white);
+    border-color: var(--burnt-orange);
+    transform: scale(1.05);
 }
 
 .tutorial-text {
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--dark-brown);
+    margin: 0;
+    line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+    .tutorial-list {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 0.8rem;
+    }
+    
+    .tutorial-item {
+        flex: 1;
+        flex-direction: column;
+        text-align: center;
+        padding: 1.2rem 0.6rem;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 150px;
+        gap: 0.8rem;
+    }
+    
+    .tutorial-step-number {
+        margin: 0 auto;
+    }
+    
+    .tutorial-text {
+        text-align: center;
+        font-size: 0.8rem;
+    }
 }
 
 /* FOOTER */
