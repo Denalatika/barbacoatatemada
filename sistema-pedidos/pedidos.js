@@ -646,14 +646,6 @@ function sendOrderToWhatsApp() {
                 window.location.href = waUrl;
             }
         }
-        
-        // Ofrecer limpiar el carrito después de enviar
-        setTimeout(() => {
-            const clearConfirm = confirm('¿Quieres vaciar el carrito actual para iniciar un nuevo pedido?');
-            if (clearConfirm) {
-                clearCart();
-            }
-        }, 1500);
     }
 }
 
@@ -905,6 +897,7 @@ function saveCustomerForFutureDatabase() {
             method: 'POST',
             mode: 'cors', // Usar cors con un content-type simple evita OPTIONS preflight y maneja la redirección de forma nativa
             redirect: 'follow', // Muy importante para seguir el redirect 302 de Google Apps Script
+            keepalive: true, // NUEVO: Evita que la petición sea abortada por el navegador al navegar/redirigir a WhatsApp
             headers: {
                 'Content-Type': 'text/plain;charset=utf-8' // Content-type simple para no disparar preflight OPTIONS que Google bloquea
             },
