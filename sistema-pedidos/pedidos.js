@@ -633,8 +633,19 @@ function sendOrderToWhatsApp() {
         // Guardar el perfil de contacto del cliente para futuros pedidos (Autocompletado)
         saveCustomerProfileLocal();
         
-        // Abrir WhatsApp en pestaña nueva
-        window.open(waUrl, '_blank');
+        // Abrir WhatsApp de forma robusta e inmune a bloqueadores de ventanas emergentes
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            // En móvil, la redirección directa es óptima para abrir la app nativa de WhatsApp
+            window.location.href = waUrl;
+        } else {
+            // En escritorio, intentamos abrir en pestaña nueva para conservar la pestaña de compra
+            const waWindow = window.open(waUrl, '_blank');
+            if (!waWindow || waWindow.closed || typeof waWindow.closed === 'undefined') {
+                // Si el bloqueador de ventanas emergentes de escritorio lo detiene, redirigimos la pestaña actual
+                window.location.href = waUrl;
+            }
+        }
         
         // Ofrecer limpiar el carrito después de enviar
         setTimeout(() => {
