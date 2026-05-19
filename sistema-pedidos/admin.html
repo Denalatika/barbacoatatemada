@@ -482,9 +482,20 @@
                 <div class="form-group" style="background-color: var(--soft-gray); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid rgba(31, 18, 11, 0.08); margin-bottom: 2rem;">
                     <label for="sheets_api_url" class="form-label" style="font-weight: 700; color: var(--burnt-orange);">🔗 URL de tu Google Apps Script Web App:</label>
                     <input type="text" id="sheets_api_url" class="form-control" placeholder="https://script.google.com/macros/s/XXXXX/exec" style="margin-bottom: 0.8rem;">
-                    <button type="button" class="btn-admin btn-admin-primary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem;" onclick="saveSheetsUrl()">
-                        Guardar Configuración de Sheets
-                    </button>
+                    
+                    <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                        <button type="button" class="btn-admin btn-admin-primary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem;" onclick="saveSheetsUrl()">
+                            Guardar Configuración de Sheets
+                        </button>
+                        <button type="button" id="btn-test-sheets" class="btn-admin btn-admin-secondary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem;" onclick="testSheetsConnection()">
+                            ⚡️ Probar Conexión (Enviar Fila de Prueba)
+                        </button>
+                    </div>
+
+                    <!-- Bloque de diagnóstico visual de conexión -->
+                    <div id="sheets-diagnostic-box" style="display: none; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid transparent; font-size: 0.85rem; line-height: 1.5; margin-top: 1rem;">
+                        <!-- El JS llenará esto dinámicamente -->
+                    </div>
                 </div>
 
                 <h3 class="font-heading" style="font-size: 1.3rem; margin-bottom: 1.2rem; color: var(--dark-brown);">📘 Guía de Instalación Paso a Paso (Solo toma 3 minutos)</h3>
@@ -717,6 +728,6 @@ function doGet(e) {
 
     <!-- Scripts -->
     <script src="menu-data.js"></script>
-    <script src="admin.js"></script>
+    <script src="admin.js?v=1.0.6"></script>
 </body>
 </html>

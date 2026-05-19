@@ -98,6 +98,163 @@ window.saveSheetsUrl = function() {
     }
 };
 
+// Probar conexión con Google Sheets
+window.testSheetsConnection = function() {
+    if (!sheetsUrlInput) return;
+    
+    const url = sheetsUrlInput.value.trim();
+    if (url === '') {
+        alert("Por favor ingresa primero la URL de tu Google Apps Script en el campo de arriba.");
+        return;
+    }
+    
+    if (!url.startsWith('https://script.google.com/')) {
+        alert("La URL no es válida. Debe comenzar con https://script.google.com/");
+        return;
+    }
+    
+    const btnTest = document.getElementById('btn-test-sheets');
+    const diagBox = document.getElementById('sheets-diagnostic-box');
+    
+    if (btnTest) {
+        btnTest.disabled = true;
+        btnTest.innerText = "⏳ Probando conexión...";
+        btnTest.style.opacity = "0.7";
+    }
+    
+    if (diagBox) {
+        diagBox.style.display = "block";
+        diagBox.style.backgroundColor = "#FFF3CD";
+        diagBox.style.borderColor = "#FFC107";
+        diagBox.style.color = "#664d03";
+        diagBox.innerHTML = `
+            <strong>🔄 Iniciando prueba de comunicación...</strong><br>
+            Enviando un pedido de prueba en tiempo real a tu Google Sheets Web App. Esto toma unos segundos...
+        `;
+    }
+    
+    const testPayload = {
+        customer_name: "SOPORTE TÉCNICO (Fila de Prueba)",
+        customer_phone: "0000000000",
+        customer_dob: "1990-01-01",
+        delivery_type: "A domicilio",
+        address: "Prueba desde Panel de Control de Administrador",
+        location_link: "https://maps.google.com/test",
+        payment_method: "Transferencia",
+        transfer_status: "Pendiente de validar",
+        order_total: "$999.00",
+        order_items: "- 1 u. x PRUEBA DE CONEXIÓN EXITOSA ($999.00)\n",
+        notes: "Esta es una fila de prueba generada automáticamente para validar la sincronización correcta con Google Sheets."
+    };
+    
+    // Configurar un timeout de 12 segundos
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
+    
+    fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        redirect: 'follow',
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(testPayload),
+        signal: controller.signal
+    })
+    .then(response => {
+        clearTimeout(timeoutId);
+        return response.json();
+    })
+    .then(data => {
+        if (btnTest) {
+            btnTest.disabled = false;
+            btnTest.innerText = "⚡️ Probar Conexión (Enviar Fila de Prueba)";
+            btnTest.style.opacity = "1";
+        }
+        
+        if (data && data.status === "success") {
+            // Guardar automáticamente la URL exitosa en localStorage
+            localStorage.setItem('valetatemada_sheets_url', url);
+            if (sheetsStatusCard) sheetsStatusCard.style.display = 'flex';
+            
+            if (diagBox) {
+                diagBox.style.backgroundColor = "#D1E7DD";
+                diagBox.style.borderColor = "#BADBCC";
+                diagBox.style.color = "#0F5132";
+                diagBox.innerHTML = `
+                    <strong>🟢 ¡Conexión exitosa con tu Google Sheets!</strong><br>
+                    El script de Google respondió con éxito. Se ha insertado correctamente la fila de prueba: <strong>'SOPORTE TÉCNICO (Fila de Prueba)'</strong>.<br><br>
+                    <strong>¡Felicidades!</strong> Tu base de datos está enlazada al 100% y capturará de forma automática y gratuita todos los pedidos que tus clientes hagan desde sus celulares, iPads y computadoras.
+                `;
+            }
+            showToast("¡Conexión probada y guardada con éxito!");
+        } else {
+            // Caso en el que el script responde pero tiene un error interno
+            const errMsg = data ? data.message : "Error desconocido en el script";
+            if (diagBox) {
+                diagBox.style.backgroundColor = "#F8D7DA";
+                diagBox.style.borderColor = "#F5C2C7";
+                diagBox.style.color = "#842029";
+                diagBox.innerHTML = `
+                    <strong>🔴 Error Interno en tu Apps Script:</strong><br>
+                    Tu servidor de Google Apps Script se comunicó pero falló al procesar el archivo. El error devuelto es:<br>
+                    <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.4rem; border-radius: 4px; display: inline-block; margin-top: 0.3rem;">${errMsg}</code><br><br>
+                    <strong>Cómo solucionarlo:</strong>
+                    <ol style="margin-top: 0.5rem; padding-left: 1.2rem;">
+                        <li>Asegúrate de que no eliminaste ni cambiaste el nombre de la pestaña <strong>"Pedidos"</strong> en tu hoja de cálculo.</li>
+                        <li>Si creaste el script directamente en Google Drive de forma independiente (no desde Extensiones > Apps Script de tu hoja), asegúrate de haber pegado el ID de tu hoja de cálculo en la variable <code>SPREADSHEET_ID</code> en la línea 9 de tu script.</li>
+                    </ol>
+                `;
+            }
+        }
+    })
+    .catch(error => {
+        clearTimeout(timeoutId);
+        if (btnTest) {
+            btnTest.disabled = false;
+            btnTest.innerText = "⚡️ Probar Conexión (Enviar Fila de Prueba)";
+            btnTest.style.opacity = "1";
+        }
+        
+        console.error("Error en la conexión de Sheets:", error);
+        
+        let diagnosticMsg = "";
+        
+        if (error.name === 'AbortError') {
+            diagnosticMsg = `
+                <strong>🔴 Tiempo de Espera Agotado (Timeout):</strong><br>
+                La petición tardó más de 12 segundos en responder. Esto suele ocurrir si los servidores de Google están congestionados o si el Apps Script está colgado procesando otra petición.<br><br>
+                <strong>Recomendación:</strong> Vuelve a intentar en unos momentos. Si el error persiste, comprueba que tu hoja de cálculo de Google Drive abre normalmente.
+            `;
+        } else {
+            diagnosticMsg = `
+                <strong>🔴 Error de Red o Bloqueo de CORS Detectado:</strong><br>
+                El navegador bloqueó la conexión a tu Apps Script. Esto ocurre principalmente por un tema de permisos y seguridad de Google.<br><br>
+                <strong>Cómo solucionarlo en 4 sencillos pasos:</strong>
+                <ol style="margin-top: 0.5rem; padding-left: 1.2rem; line-height: 1.6;">
+                    <li>Abre tu editor de Google Apps Script.</li>
+                    <li>Haz click en el botón azul <strong>"Implementar"</strong> (Deploy) arriba a la derecha, luego selecciona <strong>"Nueva implementación"</strong> (New Deployment). <em>(No uses "Probar implementaciones", debe ser una implementación activa).</em></li>
+                    <li>En la configuración de la Aplicación Web, asegúrate de configurar obligatoriamente:
+                        <ul style="margin-top: 0.3rem; margin-bottom: 0.3rem;">
+                            <li><strong>Ejecutar como:</strong> Tú (tu cuenta de correo)</li>
+                            <li><strong>Quién tiene acceso:</strong> <strong style="color: #9e1c1c;">Cualquiera (Anyone)</strong></li>
+                        </ul>
+                        Si dejas "Solo yo" (Only me), Google bloqueará las conexiones de tus clientes o navegadores externos.
+                    </li>
+                    <li>Haz click en <strong>Implementar</strong>, otorga todos los permisos de seguridad de Google si te los solicita, y <strong>copia la nueva URL generada</strong>. Pégala en el campo gris arriba de esta página y vuelve a probar.</li>
+                </ol>
+            `;
+        }
+        
+        if (diagBox) {
+            diagBox.style.backgroundColor = "#F8D7DA";
+            diagBox.style.borderColor = "#F5C2C7";
+            diagBox.style.color = "#842029";
+            diagBox.innerHTML = diagnosticMsg;
+        }
+    });
+};
+
 // Renderizar tabla
 function renderAdminTable() {
     if (!tbody) return;

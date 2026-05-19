@@ -853,7 +853,7 @@ function saveCustomerForFutureDatabase() {
     // 2. ENLACE DE PRODUCCIÓN POR DEFECTO:
     // Al desplegar tu sitio en Vercel, tus clientes no tienen tu URL de Sheets en su localStorage.
     // Para que los pedidos de TODOS tus clientes se guarden en tu Google Sheets, coloca aquí tu URL de Apps Script:
-    const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwqV5o9P1K1r2_2tNn4O8XF6pP1_PLACEHOLDER/exec"; 
+    const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbz2d8k0BU0CFnd4wO_ZA-FbaXPrhB4y57XQ3Tu_8A1RBlFXCU-j77u9YZNXFVncMQWs/exec"; 
     
     if (!sheetsUrl || sheetsUrl === "null" || sheetsUrl.trim() === "") {
         sheetsUrl = DEFAULT_SHEETS_URL;
