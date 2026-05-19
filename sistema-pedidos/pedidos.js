@@ -762,7 +762,7 @@ function updateOrderSummary() {
             <p style="margin-bottom: 0.6rem; font-weight: 600; color: var(--dark-brown);">Realiza tu transferencia a los siguientes datos:</p>
             <div style="background-color: rgba(255, 255, 255, 0.6); padding: 0.8rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem; text-align: left; font-size: 0.85rem; border: 1px solid rgba(184, 92, 44, 0.15);">
                 <div style="margin-bottom: 0.3rem;"><strong>Banco:</strong> ${bankName}</div>
-                <div style="margin-bottom: 0.3rem;"><strong>CLABE:</strong> <span style="font-family: monospace; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.5px;">${bankClabe}</span></div>
+                <div style="margin-bottom: 0.3rem;"><strong>CLABE:</strong> <span class="bank-clabe-val">${bankClabe}</span></div>
                 <div style="margin-bottom: 0.3rem;"><strong>Titular:</strong> ${bankHolder}</div>
                 ${bankNotes ? `<div style="font-style: italic; color: #666; margin-top: 0.3rem; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 0.3rem;">${bankNotes}</div>` : ''}
             </div>
