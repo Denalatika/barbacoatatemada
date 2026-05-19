@@ -508,18 +508,49 @@
                         <pre id="code-block">
 /*
  * Google Apps Script - Registro de Pedidos Barbacoa Tatemada
- * Permite guardar de forma segura pedidos hechos desde el sitio estático
+ * Versión 1.1 - Ultra-Robusta (Soporta scripts contenedores e independientes)
  */
 
+// CONFIGURACIÓN DE SEGURIDAD (Opcional):
+// Si creaste este script directamente desde Google Drive (y no desde Extensiones > Apps Script de tu hoja),
+// pega el ID de tu hoja de cálculo entre las comillas abajo. Lo encuentras en la URL de tu hoja.
+// Ejemplo: "1aBCDeFghIJKlmNoPQRStuvwXYz1234567890"
+var SPREADSHEET_ID = ""; 
+
 function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Pedidos");
+  var ss;
   
-  // Si no existe la pestaña, crearla
-  if (!sheet) {
-    sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("Pedidos");
+  // 1. Intentar abrir la hoja de cálculo activa (para scripts contenedores)
+  try {
+    ss = SpreadsheetApp.getActiveSpreadsheet();
+  } catch(err) {
+    ss = null;
   }
   
-  // Si la pestaña está vacía (fila 1 está vacía), crear los encabezados
+  // 2. Si no se puede abrir como activa, abrir usando el ID proporcionado (para scripts independientes)
+  if (!ss && SPREADSHEET_ID && SPREADSHEET_ID.trim() !== "") {
+    try {
+      ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    } catch(err) {
+      ss = null;
+    }
+  }
+  
+  // 3. Si sigue sin resolverse, retornar un error claro
+  if (!ss) {
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "error",
+      "message": "Error de Configuración: No se pudo enlazar ninguna hoja de cálculo. Si creaste el script desde Drive (y no desde la hoja), asegúrate de colocar el SPREADSHEET_ID en la línea 9 de este script."
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Obtener o crear la pestaña "Pedidos"
+  var sheet = ss.getSheetByName("Pedidos");
+  if (!sheet) {
+    sheet = ss.insertSheet("Pedidos");
+  }
+  
+  // Crear encabezados si la hoja está totalmente vacía
   if (sheet.getLastRow() === 0) {
     sheet.appendRow([
       "Fecha/Hora", 
@@ -539,13 +570,18 @@ function doPost(e) {
   }
   
   try {
+    // Validar datos de entrada
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error("No se recibieron datos en el cuerpo de la petición POST.");
+    }
+    
     var data = JSON.parse(e.postData.contents);
     
-    // Añadir fila con la información del pedido
+    // Escribir fila con información detallada
     sheet.appendRow([
       new Date().toLocaleString("es-MX", {timeZone: "America/Hermosillo"}),
       data.customer_name || "N/A",
-      "'" + (data.customer_phone || "N/A"), // La comilla simple evita que Excel borre los ceros iniciales
+      "'" + (data.customer_phone || "N/A"), // Comilla para conservar ceros iniciales en Excel/Sheets
       data.customer_dob || "N/A",
       data.delivery_type || "N/A",
       data.address || "N/A",
@@ -557,7 +593,7 @@ function doPost(e) {
       data.notes || "N/A"
     ]);
     
-    // Auto-ajustar columnas
+    // Auto-ajustar el ancho de las columnas
     sheet.autoResizeColumns(1, 12);
     
     return ContentService.createTextOutput(JSON.stringify({
@@ -573,11 +609,11 @@ function doPost(e) {
   }
 }
 
-// Habilitar CORS / GET para pruebas
+// Habilitar GET para pruebas rápidas en navegador
 function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     "status": "online",
-    "message": "El Apps Script de Barbacoa Tatemada El Vale está funcionando correctamente."
+    "message": "El Apps Script de Barbacoa Tatemada El Vale está funcionando correctamente y listo para recibir peticiones POST."
   })).setMimeType(ContentService.MimeType.JSON);
 }
                         </pre>
@@ -590,9 +626,12 @@ function doGet(e) {
                         1. Haz click en el botón <strong>Implementar</strong> (Deploy) en la esquina superior derecha, luego selecciona <strong>Nueva implementación</strong> (New Deployment).<br>
                         2. Haz click en el engranaje de configuración y elige <strong>Aplicación Web</strong> (Web App).<br>
                         3. En el campo "Ejecutar como" selecciona: <strong>Tú (tu correo electrónico)</strong>.<br>
-                        4. En el campo "Quién tiene acceso" selecciona obligatoriamente: <strong>Cualquiera</strong> (Anyone).<br>
-                        5. Presiona <strong>Implementar</strong>. Google te pedirá autorizar permisos (haz click en "Configuración Avanzada" e "Ir a Pedidos Barbacoa (no seguro)").
+                        4. En el campo "Quién tiene acceso" selecciona obligatoriamente: <strong>Cualquiera</strong> (Anyone). <em>(Si dejas "Solo yo", las peticiones de tus clientes serán bloqueadas y el Excel no se actualizará).</em><br>
+                        5. Presiona <strong>Implementar</strong>. Google te pedirá autorizar permisos (haz click en "Autorizar acceso", luego en tu cuenta, luego en el enlace pequeño "Configuración Avanzada / Advanced" en letras grises y finalmente en "Ir a Proyecto sin nombre (no seguro)" para conceder los accesos).
                     </p>
+                    <div style="background-color: #FFF3CD; border-left: 4px solid #FFC107; padding: 0.8rem 1rem; border-radius: var(--radius-sm); margin-top: 0.8rem; font-size: 0.8rem; color: #664d03; line-height: 1.45;">
+                        <strong>⚠️ NOTA CRÍTICA DE ACTUALIZACIONES:</strong> Cada vez que realices una edición en tu código de Apps Script (por ejemplo, al añadir campos o modificar la base de datos), <strong>debes hacer una Nueva Implementación</strong> (Deploy > New Deployment) y copiar/guardar la nueva URL generada. Si solo guardas el script o no creas una nueva versión, Google seguirá ejecutando el código viejo y las actualizaciones no se reflejarán.
+                    </div>
                 </div>
 
                 <div class="step-instruction">

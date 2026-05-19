@@ -847,9 +847,21 @@ function showToast(message) {
  * configurado por el administrador, garantizando un registro CRM 100% gratuito.
  */
 function saveCustomerForFutureDatabase() {
-    const sheetsUrl = localStorage.getItem('valetatemada_sheets_url');
-    if (!sheetsUrl) {
-        console.log("Conexión con Google Sheets no configurada. Saltando registro.");
+    // 1. Intentar obtener la URL de localStorage (útil para pruebas locales o si el admin la edita en su navegador)
+    let sheetsUrl = localStorage.getItem('valetatemada_sheets_url');
+    
+    // 2. ENLACE DE PRODUCCIÓN POR DEFECTO:
+    // Al desplegar tu sitio en Vercel, tus clientes no tienen tu URL de Sheets en su localStorage.
+    // Para que los pedidos de TODOS tus clientes se guarden en tu Google Sheets, coloca aquí tu URL de Apps Script:
+    const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwqV5o9P1K1r2_2tNn4O8XF6pP1_PLACEHOLDER/exec"; 
+    
+    if (!sheetsUrl || sheetsUrl === "null" || sheetsUrl.trim() === "") {
+        sheetsUrl = DEFAULT_SHEETS_URL;
+    }
+    
+    // Si sigue siendo el placeholder o está vacío, saltamos la sincronización
+    if (!sheetsUrl || sheetsUrl.includes("PLACEHOLDER") || sheetsUrl.trim() === "") {
+        console.log("Conexión con Google Sheets no configurada en código ni en local. Saltando registro.");
         return;
     }
     
