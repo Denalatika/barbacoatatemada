@@ -1171,6 +1171,7 @@ textarea.form-control {
     }
     
     .radio-tile-label {
+        display: block;
         width: 100%;
         flex: none;
     }
