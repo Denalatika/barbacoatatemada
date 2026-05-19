@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Handle navigation
         if (targetId === 'whatsapp') {
-            window.open('https://wa.me/526311052305', '_blank');
+            window.location.href = '/sistema-pedidos/';
         } else if (targetId === 'body') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {

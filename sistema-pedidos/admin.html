@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | Barbacoa Tatemada El Vale</title>
+    <meta name="description" content="Panel administrativo para gestionar el menú digital y la integración con Google Sheets de Barbacoa Tatemada El Vale.">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos de Pedidos y del Admin -->
+    <link rel="stylesheet" href="pedidos.css">
+    <style>
+        /* Estilos específicos premium para el Panel Admin */
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .admin-card {
+            background-color: var(--white);
+            border-radius: var(--radius-md);
+            padding: 1.8rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(31, 18, 11, 0.04);
+            margin-bottom: 2rem;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-title-wrap h1 {
+            font-size: 2.2rem;
+            color: var(--dark-brown);
+        }
+
+        .admin-title-wrap p {
+            font-size: 0.95rem;
+            color: rgba(31, 18, 11, 0.6);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--soft-gray);
+            border: 1px solid rgba(31, 18, 11, 0.06);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-val {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--burnt-orange);
+            font-family: var(--font-heading);
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-card .stat-lbl {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(31, 18, 11, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Tabla de Edición de Menú */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(31, 18, 11, 0.08);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+            background-color: var(--white);
+        }
+
+        .admin-table th {
+            background-color: var(--dark-brown);
+            color: var(--white);
+            padding: 0.9rem 1rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .admin-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(31, 18, 11, 0.06);
+            vertical-align: middle;
+        }
+
+        .admin-table tbody tr:hover {
+            background-color: var(--cream);
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(31, 18, 11, 0.15);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+        }
+
+        .admin-input:focus {
+            outline: none;
+            border-color: var(--burnt-orange);
+        }
+
+        .admin-textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(31, 18, 11, 0.15);
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            resize: vertical;
+            min-height: 48px;
+        }
+
+        /* Botón Guardar / Descargar */
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .btn-admin {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-admin-primary {
+            background-color: var(--burnt-orange);
+            color: var(--white);
+        }
+        .btn-admin-primary:hover {
+            background-color: var(--dark-brown);
+            transform: translateY(-1px);
+        }
+
+        .btn-admin-secondary {
+            background-color: var(--cream);
+            color: var(--burnt-orange);
+            border: 1px solid rgba(184, 92, 44, 0.15);
+        }
+        .btn-admin-secondary:hover {
+            background-color: var(--burnt-orange);
+            color: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .btn-admin-danger {
+            background-color: var(--red-error);
+            color: var(--white);
+        }
+        .btn-admin-danger:hover {
+            background-color: #9e1c1c;
+            transform: translateY(-1px);
+        }
+
+        /* Secciones Plegables / Tabs */
+        .tabs-header {
+            display: flex;
+            border-bottom: 2px solid rgba(31, 18, 11, 0.08);
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: rgba(31, 18, 11, 0.5);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--burnt-orange);
+            border-bottom-color: var(--burnt-orange);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Estilos del código e instrucciones */
+        .code-container {
+            background-color: #2b2b2b;
+            color: #f8f8f2;
+            padding: 1.2rem;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+            font-size: 0.85rem;
+            position: relative;
+            margin: 1.2rem 0;
+            overflow-x: auto;
+            max-height: 350px;
+        }
+
+        .btn-copy {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: var(--white);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-copy:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .step-instruction {
+            background-color: var(--soft-gray);
+            border-left: 4px solid var(--gold);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.2rem;
+        }
+
+        .step-instruction h4 {
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .badge-num {
+            background-color: var(--gold);
+            color: var(--dark-brown);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Switch toggle animado */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--green-success);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .product-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .sheets-status-card {
+            background-color: rgba(37, 211, 102, 0.08);
+            border: 1px solid rgba(37, 211, 102, 0.2);
+            color: var(--green-success);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+            align-items: center;
+            gap: 0.6rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Alerta Toast -->
+    <div id="alert-toast" class="alert-toast" role="alert">
+        <span class="toast-icon">⚠️</span>
+        <span id="alert-toast-text"></span>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="/" class="logo-link">
+                <img src="../assets/images/logo.png" alt="Barbacoa Tatemada El Vale" class="logo-img">
+                <span class="logo-text">Panel Administrativo</span>
+            </a>
+            <a href="/sistema-pedidos/" class="btn-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Regresar a pedidos
+            </a>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <!-- Tarjeta de bienvenida y descripción -->
+        <div class="admin-card">
+            <div class="admin-header">
+                <div class="admin-title-wrap">
+                    <h1>Administración de Barbacoa Tatemada El Vale</h1>
+                    <p>Gestiona los platos de tu menú digital, cambia precios, marca existencias y conecta Google Sheets de forma gratuita.</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-total">0</div>
+                    <div class="stat-lbl">Platillos Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-active" style="color: var(--green-success);">0</div>
+                    <div class="stat-lbl">Disponibles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-popular" style="color: var(--gold);">0</div>
+                    <div class="stat-lbl">Más Vendidos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestañas de Navegación -->
+        <div class="tabs-header">
+            <button type="button" class="tab-btn active" onclick="switchTab('tab-menu', this)">📁 Menú Digital (Catálogo)</button>
+            <button type="button" class="tab-btn" onclick="switchTab('tab-payment', this)">💳 Datos de Transferencia</button>
+            <button type="button" class="tab-btn" onclick="switchTab('tab-sheets', this)">📊 Integración Google Sheets</button>
+            <button type="button" class="tab-btn" onclick="switchTab('tab-export', this)">⚙️ Exportar Archivo</button>
+        </div>
+
+        <!-- CONTENIDO TABS -->
+
+        <!-- PESTAÑA 1: GESTIÓN DE MENÚ -->
+        <div id="tab-menu" class="tab-content active">
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <h2 class="font-heading" style="font-size: 1.5rem;">🛒 Editor del Catálogo Digital</h2>
+                    <button type="button" class="btn-admin btn-admin-secondary" onclick="addNewProductRow()">
+                        ➕ Agregar Nuevo Platillo
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table" id="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 70px;">Imagen</th>
+                                <th style="width: 180px;">Nombre</th>
+                                <th style="width: 120px;">Categoría</th>
+                                <th style="width: 80px;">Precio ($)</th>
+                                <th>Descripción</th>
+                                <th style="width: 70px; text-align: center;">Popular</th>
+                                <th style="width: 70px; text-align: center;">Disponible</th>
+                                <th style="width: 60px; text-align: center;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-tbody">
+                            <!-- Filas dinámicas -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="action-bar">
+                    <button type="button" class="btn-admin btn-admin-secondary" onclick="resetLocalMenuData()">Restablecer Original</button>
+                    <button type="button" class="btn-admin btn-admin-primary" onclick="saveLocalMenuChanges()">💾 Guardar Cambios Locales</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 2: GOOGLE SHEETS -->
+        <div id="tab-sheets" class="tab-content">
+            <div class="admin-card">
+                <h2 class="font-heading" style="font-size: 1.6rem; margin-bottom: 1rem;">📊 Conexión Gratuita a Google Sheets (CRM)</h2>
+                <p style="font-size: 0.95rem; margin-bottom: 1.5rem; color: rgba(31, 18, 11, 0.8);">
+                    Configura tu base de datos de clientes y pedidos en línea. Cuando un cliente ordene en el sitio, sus datos (Nombre, Teléfono, Tipo de Entrega, Dirección, Método de Pago, Pedido y Notas) **se escribirán automáticamente en una hoja de Google Excel en tu cuenta de Drive**. ¡Totalmente gratis y sin costos fijos!
+                </p>
+
+                <div class="sheets-status-card" id="sheets-status-card">
+                    <span>🟢</span>
+                    <span id="sheets-status-text">¡Integración activa! Los pedidos de tus clientes se enviarán de fondo a tu hoja de Google Sheets.</span>
+                </div>
+
+                <!-- Campo para el Web App URL -->
+                <div class="form-group" style="background-color: var(--soft-gray); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid rgba(31, 18, 11, 0.08); margin-bottom: 2rem;">
+                    <label for="sheets_api_url" class="form-label" style="font-weight: 700; color: var(--burnt-orange);">🔗 URL de tu Google Apps Script Web App:</label>
+                    <input type="text" id="sheets_api_url" class="form-control" placeholder="https://script.google.com/macros/s/XXXXX/exec" style="margin-bottom: 0.8rem;">
+                    <button type="button" class="btn-admin btn-admin-primary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem;" onclick="saveSheetsUrl()">
+                        Guardar Configuración de Sheets
+                    </button>
+                </div>
+
+                <h3 class="font-heading" style="font-size: 1.3rem; margin-bottom: 1.2rem; color: var(--dark-brown);">📘 Guía de Instalación Paso a Paso (Solo toma 3 minutos)</h3>
+
+                <div class="step-instruction">
+                    <h4><span class="badge-num">1</span> Crear la hoja de cálculo</h4>
+                    <p style="font-size: 0.85rem;">Crea una hoja de cálculo nueva en tu Google Drive con el nombre <strong>"Pedidos Barbacoa"</strong>. Cambia el nombre de la primera pestaña a <strong>"Pedidos"</strong>.</p>
+                </div>
+
+                <div class="step-instruction">
+                    <h4><span class="badge-num">2</span> Abrir el editor de Scripts</h4>
+                    <p style="font-size: 0.85rem;">En la barra superior de tu hoja de cálculo, haz click en <strong>Extensiones</strong> y luego en <strong>Apps Script</strong>. Esto abrirá una pestaña de desarrollo de Google.</p>
+                </div>
+
+                <div class="step-instruction">
+                    <h4><span class="badge-num">3</span> Copiar y Pegar el Código</h4>
+                    <p style="font-size: 0.85rem;">Borra todo el código que aparezca en el archivo <code>Código.gs</code> de Apps Script y pega el siguiente bloque completo de código:</p>
+                    
+                    <div class="code-container">
+                        <button class="btn-copy" onclick="copyAppsScriptCode(this)">Copiar Código</button>
+                        <pre id="code-block">
+/*
+ * Google Apps Script - Registro de Pedidos Barbacoa Tatemada
+ * Permite guardar de forma segura pedidos hechos desde el sitio estático
+ */
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Pedidos");
+  
+  // Si no existe la pestaña, crearla
+  if (!sheet) {
+    sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("Pedidos");
+  }
+  
+  // Si la pestaña está vacía (fila 1 está vacía), crear los encabezados
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      "Fecha/Hora", 
+      "Nombre Cliente", 
+      "Teléfono", 
+      "Fecha Nacimiento", 
+      "Tipo de Entrega", 
+      "Dirección", 
+      "Ubicación / Link", 
+      "Método de Pago", 
+      "Estado de Pago", 
+      "Monto Total", 
+      "Pedido", 
+      "Notas"
+    ]);
+    sheet.getRange("A1:L1").setFontWeight("bold").setBackground("#FFF4E0").setFontColor("#B85C2C");
+  }
+  
+  try {
+    var data = JSON.parse(e.postData.contents);
+    
+    // Añadir fila con la información del pedido
+    sheet.appendRow([
+      new Date().toLocaleString("es-MX", {timeZone: "America/Hermosillo"}),
+      data.customer_name || "N/A",
+      "'" + (data.customer_phone || "N/A"), // La comilla simple evita que Excel borre los ceros iniciales
+      data.customer_dob || "N/A",
+      data.delivery_type || "N/A",
+      data.address || "N/A",
+      data.location_link || "N/A",
+      data.payment_method || "N/A",
+      data.transfer_status || "N/A",
+      data.order_total || "N/A",
+      data.order_items || "N/A",
+      data.notes || "N/A"
+    ]);
+    
+    // Auto-ajustar columnas
+    sheet.autoResizeColumns(1, 12);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "success",
+      "message": "Pedido registrado correctamente en Google Sheets."
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch(error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "error",
+      "message": error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Habilitar CORS / GET para pruebas
+function doGet(e) {
+  return ContentService.createTextOutput(JSON.stringify({
+    "status": "online",
+    "message": "El Apps Script de Barbacoa Tatemada El Vale está funcionando correctamente."
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step-instruction">
+                    <h4><span class="badge-num">4</span> Implementar como Aplicación Web</h4>
+                    <p style="font-size: 0.85rem; line-height: 1.5;">
+                        1. Haz click en el botón <strong>Implementar</strong> (Deploy) en la esquina superior derecha, luego selecciona <strong>Nueva implementación</strong> (New Deployment).<br>
+                        2. Haz click en el engranaje de configuración y elige <strong>Aplicación Web</strong> (Web App).<br>
+                        3. En el campo "Ejecutar como" selecciona: <strong>Tú (tu correo electrónico)</strong>.<br>
+                        4. En el campo "Quién tiene acceso" selecciona obligatoriamente: <strong>Cualquiera</strong> (Anyone).<br>
+                        5. Presiona <strong>Implementar</strong>. Google te pedirá autorizar permisos (haz click en "Configuración Avanzada" e "Ir a Pedidos Barbacoa (no seguro)").
+                    </p>
+                </div>
+
+                <div class="step-instruction">
+                    <h4><span class="badge-num">5</span> Guardar la URL en tu sitio</h4>
+                    <p style="font-size: 0.85rem;">Al finalizar la implementación, Google te dará una <strong>URL de la Aplicación Web</strong>. Cópiala por completo, regresa a esta pestaña y pégala en el campo gris de arriba de esta página. ¡Haz click en "Guardar" y listo!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA NUEVA: DATOS BANCARIOS -->
+        <div id="tab-payment" class="tab-content">
+            <div class="admin-card">
+                <h2 class="font-heading" style="font-size: 1.6rem; margin-bottom: 1rem;">💳 Configuración de Datos para Transferencia Bancaria</h2>
+                <p style="font-size: 0.95rem; margin-bottom: 1.5rem; color: rgba(31, 18, 11, 0.8);">
+                    Configura los datos bancarios del negocio. Cuando tus clientes elijan el método de pago **"Transferencia"**, verán esta información de inmediato junto con el **Monto exacto a transferir** calculado según su carrito de compras.
+                </p>
+
+                <div style="max-width: 600px; margin-top: 1rem;">
+                    <div style="margin-bottom: 1.2rem;">
+                        <label for="bank_name" class="form-label" style="font-weight: 700; color: var(--burnt-orange);">🏦 Nombre del Banco:</label>
+                        <input type="text" id="bank_name" class="form-control" placeholder="Ej. BBVA, Santander, Banamex..." style="width: 100%; max-width: 100%;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.2rem;">
+                        <label for="bank_clabe" class="form-label" style="font-weight: 700; color: var(--burnt-orange);">🔑 CLABE Interbancaria (18 dígitos):</label>
+                        <input type="text" id="bank_clabe" class="form-control" placeholder="Ej. 0123 4567 8901 2345 67" maxlength="22" style="width: 100%; max-width: 100%;">
+                    </div>
+
+                    <div style="margin-bottom: 1.2rem;">
+                        <label for="bank_holder" class="form-label" style="font-weight: 700; color: var(--burnt-orange);">👤 Nombre del Titular / Beneficiario:</label>
+                        <input type="text" id="bank_holder" class="form-control" placeholder="Ej. Juan Pérez / Barbacoa Tatemada El Vale" style="width: 100%; max-width: 100%;">
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="bank_notes" class="form-label" style="font-weight: 700; color: var(--burnt-orange);">📝 Instrucciones o notas adicionales:</label>
+                        <textarea id="bank_notes" class="form-control" rows="3" placeholder="Ej. Por favor envía tu comprobante de pago por este medio." style="width: 100%; max-width: 100%; resize: vertical;"></textarea>
+                    </div>
+
+                    <button type="button" class="btn-admin btn-admin-primary" onclick="saveBankDetails()" style="padding: 0.7rem 1.8rem; font-size: 0.9rem;">
+                        💾 Guardar Datos Bancarios
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 3: EXPORTAR CODIGO -->
+        <div id="tab-export" class="tab-content">
+            <div class="admin-card">
+                <h2 class="font-heading" style="font-size: 1.6rem; margin-bottom: 1rem;">⚙️ Exportar Archivo de Base de Datos del Menú</h2>
+                <p style="font-size: 0.95rem; margin-bottom: 1.5rem; color: rgba(31, 18, 11, 0.8);">
+                    Cuando agregas, quitas o editas productos en la pestaña <strong>Menú Digital</strong>, los cambios se guardan localmente en tu navegador. Para aplicarlos **de forma permanente en tu sitio web**, copia el código de abajo y reemplaza por completo el contenido del archivo <code>sistema-pedidos/menu-data.js</code>, o simplemente descárgalo directamente usando el botón.
+                </p>
+
+                <div class="action-bar" style="margin-bottom: 1.2rem; justify-content: flex-start;">
+                    <button type="button" class="btn-admin btn-admin-primary" onclick="downloadMenuDataFile()">
+                        📥 Descargar Archivo menu-data.js
+                    </button>
+                    <button type="button" class="btn-admin btn-admin-secondary" onclick="copyMenuDataCode(this)">
+                        📋 Copiar Código al Portapapeles
+                    </button>
+                </div>
+
+                <div class="code-container" style="max-height: 450px;">
+                    <pre id="menu-data-code-block" style="color: #66d9ef;">
+// El código del archivo se generará dinámicamente al guardar cambios...
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 3rem;">
+        <div class="footer-container">
+            <h2 class="footer-title">Barbacoa Tatemada El Vale</h2>
+            <p class="footer-trust">Sistema de Pedidos en Línea - Panel de Control Interno.</p>
+            <div class="footer-links">
+                <span>© 2026 Panel Administrativo Privado</span>
+                <a href="/sistema-pedidos/" class="footer-link">Ver Vista del Cliente</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="menu-data.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

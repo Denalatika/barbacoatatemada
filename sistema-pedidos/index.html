@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordena Barbacoa Tatemada El Vale | Pedidos por WhatsApp</title>
+    <meta name="description" content="Haz tu pedido de barbacoa tatemada en línea. Elige tus productos, deja tus datos y envía tu pedido directo por WhatsApp.">
+    
+    <!-- Open Graph para redes sociales -->
+    <meta property="og:title" content="Ordena Barbacoa Tatemada El Vale | Pedidos por WhatsApp">
+    <meta property="og:description" content="Arma tu pedido de barbacoa tatemada en línea fácil y rápido. Directo a tu celular.">
+    <meta property="og:image" content="../assets/images/hero_barbacoa.png">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="pedidos.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
+</head>
+<body>
+
+    <!-- Alerta Toast Flotante -->
+    <div id="alert-toast" class="alert-toast" role="alert">
+        <span class="toast-icon">⚠️</span>
+        <span id="alert-toast-text"></span>
+    </div>
+
+    <!-- Header / Regreso -->
+    <header class="header">
+        <div class="header-container">
+            <a href="/" class="logo-link" id="logo-back-link">
+                <img src="../assets/images/logo.png" alt="Barbacoa Tatemada El Vale" class="logo-img">
+                <span class="logo-text">El Vale</span>
+            </a>
+            <a href="/" class="btn-back" id="btn-header-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Volver al inicio
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1 class="hero-title">Haz tu pedido en línea</h1>
+            <p class="hero-subtitle">Arma tu pedido con el auténtico sabor tatemado de Nogales, déjanos tus datos y envíalo directo por WhatsApp.</p>
+            <a href="#menu-anchor" class="hero-cta" id="cta-scroll-menu">Ver menú</a>
+        </div>
+    </section>
+
+    <!-- Indicador de Pasos -->
+    <section class="steps-section" aria-label="Pasos de compra">
+        <div class="steps-container">
+            <div class="step-item active" id="step-1">
+                <span class="step-num">1</span>
+                <span class="step-text">Elige tus productos</span>
+            </div>
+            <div class="step-item" id="step-2">
+                <span class="step-num">2</span>
+                <span class="step-text">Llena tus datos</span>
+            </div>
+            <div class="step-item" id="step-3">
+                <span class="step-num">3</span>
+                <span class="step-text">Envía por WhatsApp</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido Principal: Grid de dos columnas en Escritorio -->
+    <main class="main-layout" id="menu-anchor">
+        
+        <!-- Columna de Menú (Izquierda) -->
+        <section class="menu-section" aria-label="Menú Digital">
+            <h2 class="section-title">🌮 Nuestro Menú</h2>
+            
+            <!-- Barra de Categorías -->
+            <div class="categories-container" id="categories-container" role="tablist" aria-label="Categorías del Menú">
+                <!-- Se renderizan dinámicamente -->
+            </div>
+            
+            <!-- Cuadrícula de Productos -->
+            <div class="menu-grid" id="menu-grid">
+                <!-- Se renderizan dinámicamente -->
+            </div>
+
+            <!-- ¿Cómo hacer tu pedido? (Tutorial Helper integrado) -->
+            <section class="tutorial-section" aria-labelledby="tutorial-title">
+                <h3 id="tutorial-title" class="section-title" style="font-size: 1.3rem; border-bottom: 1px solid var(--cream);">💡 ¿Cómo hacer tu pedido?</h3>
+                <div class="tutorial-list">
+                    <div class="tutorial-item">
+                        <div class="tutorial-step-number">1</div>
+                        <p class="tutorial-text">Elige tus productos del menú.</p>
+                    </div>
+                    <div class="tutorial-item">
+                        <div class="tutorial-step-number">2</div>
+                        <p class="tutorial-text">Revisa tu pedido en el carrito.</p>
+                    </div>
+                    <div class="tutorial-item">
+                        <div class="tutorial-step-number">3</div>
+                        <p class="tutorial-text">Escribe tu nombre, teléfono y dirección.</p>
+                    </div>
+                    <div class="tutorial-item">
+                        <div class="tutorial-step-number">4</div>
+                        <p class="tutorial-text">Selecciona tu método de pago preferido.</p>
+                    </div>
+                    <div class="tutorial-item">
+                        <div class="tutorial-step-number">5</div>
+                        <p class="tutorial-text">Presiona "Enviar pedido por WhatsApp".</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Columna de Carrito y Checkout (Derecha) -->
+        <div class="sticky-sidebar">
+            
+            <!-- Bloque del Carrito -->
+            <section class="cart-card" id="cart-section" aria-labelledby="cart-title">
+                <h2 id="cart-title" class="section-title">🛒 Tu Pedido</h2>
+                
+                <div id="cart-items" class="cart-items-list">
+                    <!-- Productos seleccionados se renderizan aquí -->
+                    <div class="cart-empty" id="cart-empty">
+                        <span class="cart-empty-icon">🌮</span>
+                        <p>Aún no has agregado productos a tu pedido.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bloque del Formulario de Datos -->
+            <section class="form-card" id="form-section" aria-labelledby="form-title">
+                <h2 id="form-title" class="section-title">📝 Datos para tu pedido</h2>
+                
+                <form id="order-form" novalidate>
+                    <!-- Nombre Completo -->
+                    <div class="form-group" id="group-name">
+                        <label for="customer_name" class="form-label">Nombre completo <span class="required" aria-hidden="true">*</span></label>
+                        <input type="text" id="customer_name" name="customer_name" class="form-control" placeholder="Ej. Juan Pérez" required>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="form-group" id="group-phone">
+                        <label for="customer_phone" class="form-label">Teléfono de contacto <span class="required" aria-hidden="true">*</span></label>
+                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" placeholder="Ej. 631 105 0000" required>
+                    </div>
+                    
+                    <!-- Fecha de Nacimiento -->
+                    <div class="form-group" id="group-dob">
+                        <label for="customer_dob" class="form-label">Fecha de nacimiento <span style="font-size: 0.8rem; font-weight: 500; color: var(--gold); opacity: 0.95;">(para futuras promociones)</span></label>
+                        <input type="text" id="customer_dob" name="customer_dob" class="form-control" placeholder="DD/MM/AA" maxlength="8">
+                    </div>
+
+                    <!-- Tipo de Entrega (Para recoger / A domicilio) -->
+                    <div class="form-group" id="group-delivery">
+                        <label class="form-label">¿Cómo quieres recibir tu pedido? <span class="required" aria-hidden="true">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-tile-label">
+                                <input type="radio" name="delivery_type" value="Para recoger" class="radio-tile-input" required>
+                                <span class="radio-tile">
+                                    <span class="radio-icon">🛍️</span>
+                                    <span>Para recoger</span>
+                                </span>
+                            </label>
+                            <label class="radio-tile-label">
+                                <input type="radio" name="delivery_type" value="A domicilio" class="radio-tile-input" required>
+                                <span class="radio-tile">
+                                    <span class="radio-icon">🛵</span>
+                                    <span>A domicilio</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Dirección (Condicional para A domicilio) -->
+                    <div class="form-group conditional-field" id="address-field">
+                        <label for="address" class="form-label">Dirección de entrega <span class="required" aria-hidden="true">*</span></label>
+                        <textarea id="address" name="address" class="form-control" placeholder="Calle, número, colonia, cruces y referencias de color de casa o portón."></textarea>
+                    </div>
+
+                    <!-- Enlace de Ubicación (Condicional para A domicilio) -->
+                    <div class="form-group conditional-field" id="group-location">
+                        <label for="location_link" class="form-label">📍 Enlace de tu ubicación de Maps (para el envío)</label>
+                        <input type="text" id="location_link" name="location_link" class="form-control" placeholder="Pega aquí el enlace de tu ubicación de Google Maps o WhatsApp">
+                    </div>
+
+                    <!-- Método de Pago (Efectivo / Transferencia) -->
+                    <div class="form-group" id="group-payment">
+                        <label class="form-label">Método de pago <span class="required" aria-hidden="true">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-tile-label">
+                                <input type="radio" name="payment_method" value="Efectivo" class="radio-tile-input" required>
+                                <span class="radio-tile">
+                                    <span class="radio-icon">💵</span>
+                                    <span>Efectivo</span>
+                                </span>
+                            </label>
+                            <label class="radio-tile-label">
+                                <input type="radio" name="payment_method" value="Transferencia" class="radio-tile-input" required>
+                                <span class="radio-tile">
+                                    <span class="radio-icon">📱</span>
+                                    <span>Transferencia</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Estado de Transferencia (Condicional para Transferencia) -->
+                    <div class="form-group conditional-field" id="transfer-field">
+                        <label class="form-label">Detalles de Transferencia <span class="required" aria-hidden="true">*</span></label>
+                        
+                        <!-- Caja de Información de Transferencia con el total dinámico -->
+                        <div id="transfer-info-box" class="transfer-notice-box">
+                            <!-- Se actualiza dinámicamente con JS -->
+                        </div>
+
+                        <label class="form-label" style="margin-top: 1rem; font-size: 0.9rem;">¿Cuál es el estado de tu transferencia?</label>
+                        <div class="radio-group">
+                            <label class="radio-tile-label">
+                                <input type="radio" name="transfer_status" value="Ya transferí" class="radio-tile-input">
+                                <span class="radio-tile">
+                                    <span class="radio-icon">✅</span>
+                                    <span>Ya transferí</span>
+                                </span>
+                            </label>
+                            <label class="radio-tile-label">
+                                <input type="radio" name="transfer_status" value="Voy a transferir" class="radio-tile-input">
+                                <span class="radio-tile">
+                                    <span class="radio-icon">🕒</span>
+                                    <span>Voy a transferir</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Notas Adicionales -->
+                    <div class="form-group" id="group-notes">
+                        <label for="notes" class="form-label">Notas del pedido</label>
+                        <textarea id="notes" name="notes" class="form-control" placeholder="Ej. Sin cebolla en los tacos, salsa roja extra, entregar en portería, etc."></textarea>
+                    </div>
+
+                    <!-- Resumen del pedido dinámico integrado -->
+                    <div class="summary-container" id="summary-container" style="display: none;">
+                        <h3 class="summary-heading">📋 Resumen del pedido</h3>
+                        <div class="summary-details" id="summary-details">
+                            <!-- Datos del cliente y pedido -->
+                        </div>
+                    </div>
+
+                    <!-- Botón de Envío -->
+                    <button type="submit" class="btn-submit-order" id="btn-submit-order">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.458L0 24zm6.59-4.846c1.6.95 3.197 1.451 4.811 1.452 5.518 0 10.006-4.486 10.01-10.002.002-2.673-1.04-5.184-2.937-7.082C16.633 1.625 14.12 0.58 11.45 0.58c-5.52 0-10.01 4.487-10.014 10.005-.001 1.737.453 3.428 1.316 4.922L1.743 19.86l4.904-1.282zM17.5 14.85c-.3-.15-1.785-.88-2.06-.98-.27-.1-.47-.15-.67.15-.2.3-.77.98-.95 1.18-.18.2-.35.23-.65.08-1.02-.51-1.7-.89-2.38-2.07-.18-.31-.18-.58.07-.83.22-.22.3-.45.45-.6.15-.15.2-.25.3-.45.1-.2.05-.38-.02-.53-.08-.15-.67-1.62-.92-2.22-.245-.59-.495-.51-.67-.52-.17-.01-.37-.01-.57-.01-.2 0-.52.08-.8.38-.27.3-1.05 1.03-1.05 2.5 0 1.47 1.07 2.89 1.22 3.1.15.2 2.1 3.2 5.08 4.49.7.31 1.26.49 1.69.63.71.22 1.35.19 1.86.11.57-.08 1.78-.73 2.03-1.43.25-.7.25-1.3.18-1.43-.08-.12-.28-.2-.58-.35z"/>
+                        </svg>
+                        Enviar pedido por WhatsApp
+                    </button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <!-- Barra de Carrito Fija en la Parte Inferior para Móvil -->
+    <div class="mobile-cart-bar" id="mobile-cart-bar" style="display: none;">
+        <div class="mobile-cart-info">
+            <span class="mobile-cart-title">🛒 Tienes productos en tu carrito</span>
+            <span class="mobile-cart-count" id="mobile-cart-count">0 productos en total</span>
+        </div>
+        <button type="button" class="btn-mobile-view-cart" id="btn-mobile-view-cart">Ver pedido</button>
+    </div>
+
+    <!-- Modal del Carrito Móvil -->
+    <div class="mobile-cart-modal" id="mobile-cart-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="mobile-cart-modal-content">
+            <div class="mobile-cart-modal-header">
+                <h2 id="modal-title" class="section-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">🛒 Tu Pedido</h2>
+                <button type="button" class="btn-close-modal" id="btn-close-modal" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <div id="mobile-cart-modal-items" class="cart-items-list" style="margin-bottom: 1.5rem;">
+                <!-- Productos se renderizan aquí -->
+            </div>
+            <a href="#form-section" class="btn-submit-order" style="text-decoration: none;" onclick="document.getElementById('mobile-cart-modal').classList.remove('active');">
+                ✍️ Llenar datos de envío
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <h2 class="footer-title">Barbacoa Tatemada El Vale</h2>
+            <p class="footer-trust">Sabor, calidad y tradición en cada mordida. Preparada con la receta familiar que te encanta, directo desde Nogales, Sonora.</p>
+            
+            <div class="footer-contact">
+                📞 Llámanos o escríbenos: <a href="https://wa.me/526311052305" target="_blank">+52 631 105 2305</a>
+            </div>
+            
+            <div class="footer-links">
+                <span>© 2026 Barbacoa Tatemada El Vale</span>
+                <a href="/" class="footer-link">Página Principal</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="menu-data.js"></script>
+    <script src="pedidos.js"></script>
+</body>
+</html>
