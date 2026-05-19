@@ -264,6 +264,7 @@ a {
         max-height: calc(100vh - 140px);
         overflow-y: auto;
         padding-right: 0.5rem;
+        margin-top: 0.7rem; /* Nivela visualmente el inicio del carrito con el título del menú */
     }
 }
 
@@ -294,6 +295,16 @@ a {
 
 .categories-container::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
+}
+
+/* En tablets y pantallas de escritorio, permitimos que las categorías se ajusten/envuelvan en múltiples líneas */
+@media (min-width: 768px) {
+    .categories-container {
+        white-space: normal;
+        flex-wrap: wrap;
+        overflow-x: visible;
+        padding-bottom: 0;
+    }
 }
 
 .category-tab {
