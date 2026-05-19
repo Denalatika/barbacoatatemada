@@ -733,6 +733,14 @@ function updateOrderSummary() {
             <span class="summary-label">Forma de pago:</span>
             <span class="summary-val">${paymentMethod}</span>
         </div>
+        ${paymentMethod === 'Transferencia' ? `
+        <div class="summary-row" style="animation: fadeIn 0.3s ease;">
+            <span class="summary-label">Estado transf.:</span>
+            <span class="summary-val" style="color: ${document.querySelector('input[name="transfer_status"]:checked') ? '#2e7d32' : 'var(--burnt-orange)'}; font-weight: 600;">
+                ${document.querySelector('input[name="transfer_status"]:checked') ? document.querySelector('input[name="transfer_status"]:checked').value : '<i>No seleccionado</i>'}
+            </span>
+        </div>
+        ` : ''}
         <div class="summary-row total-row" style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px dashed rgba(31, 18, 11, 0.15); font-weight: 700; font-size: 1.15rem; color: var(--dark-brown); display: flex; justify-content: space-between; align-items: center;">
             <span class="summary-label">Total del Pedido:</span>
             <span class="summary-val" style="color: var(--burnt-orange); font-size: 1.25rem;">${getCartTotalText()}</span>
