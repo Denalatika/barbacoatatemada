@@ -259,25 +259,8 @@ a {
     }
     
     .sticky-sidebar {
-        position: sticky;
-        top: 110px; /* Debajo del header */
-        max-height: calc(100vh - 140px);
-        overflow-y: auto;
-        padding-right: 0.5rem;
         margin-top: 0.7rem; /* Nivela visualmente el inicio del carrito con el título del menú */
     }
-}
-
-/* Scrollbar personalizado para la barra lateral */
-.sticky-sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-.sticky-sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-.sticky-sidebar::-webkit-scrollbar-thumb {
-    background: rgba(31, 18, 11, 0.15);
-    border-radius: 3px;
 }
 
 /* Categorías del Menú */
