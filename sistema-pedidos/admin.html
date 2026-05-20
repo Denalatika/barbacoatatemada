@@ -369,9 +369,186 @@
             align-items: center;
             gap: 0.6rem;
         }
+
+        /* Estilos premium para Pantalla de Login */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, var(--dark-brown) 0%, #3a2214 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            overflow-y: auto;
+        }
+
+        .login-card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: loginFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        @keyframes loginFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-logo {
+            height: 90px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(31, 18, 11, 0.15));
+        }
+
+        .login-title {
+            font-size: 2rem;
+            color: var(--dark-brown);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            font-size: 0.9rem;
+            color: rgba(31, 18, 11, 0.6);
+            text-align: center;
+            margin-bottom: 2.2rem;
+            line-height: 1.5;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(to right, var(--warm-orange), var(--burnt-orange));
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(184, 92, 44, 0.35);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 92, 44, 0.45);
+            background: linear-gradient(to right, #e8913e, #cc6936);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-toggle-password {
+            position: absolute;
+            right: 12px;
+            bottom: 11px;
+            background: none;
+            border: none;
+            color: rgba(31, 18, 11, 0.4);
+            cursor: pointer;
+            padding: 0.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .btn-toggle-password:hover {
+            color: var(--burnt-orange);
+        }
+
+        .login-error-msg {
+            background-color: rgba(198, 40, 40, 0.08);
+            border: 1px solid rgba(198, 40, 40, 0.2);
+            color: var(--red-error);
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            animation: loginShake 0.4s ease;
+        }
+
+        @keyframes loginShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* Logout Button */
+        .btn-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1rem;
+            border-radius: var(--radius-sm);
+            background-color: rgba(198, 40, 40, 0.08);
+            color: var(--red-error);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(198, 40, 40, 0.15);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-logout:hover {
+            background-color: var(--red-error);
+            color: var(--white);
+            transform: translateY(-1px);
+        }
+
+        /* Control de visibilidad condicional con CSS inmediato */
+        #admin-panel-content {
+            display: none;
+        }
+        #login-container {
+            display: flex;
+        }
+        .admin-logged-in #admin-panel-content {
+            display: block;
+        }
+        .admin-logged-in #login-container {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
+
+    <script>
+        // Verificar autenticación de forma inmediata para evitar parpadeo de contenido
+        if (localStorage.getItem('valetatemada_admin_logged_in') === 'true') {
+            document.body.classList.add('admin-logged-in');
+        }
+    </script>
 
     <!-- Alerta Toast -->
     <div id="alert-toast" class="alert-toast" role="alert">
@@ -379,22 +556,71 @@
         <span id="alert-toast-text"></span>
     </div>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-container">
-            <a href="/" class="logo-link">
-                <img src="../assets/images/logo.png" alt="Barbacoa Tatemada El Vale" class="logo-img">
-                <span class="logo-text">Panel Administrativo</span>
-            </a>
-            <a href="/sistema-pedidos/" class="btn-back">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-                Regresar a pedidos
-            </a>
+    <!-- Pantalla de Login -->
+    <div id="login-container" class="login-container">
+        <div class="login-card">
+            <div class="login-logo-wrap">
+                <img src="../assets/images/logo.png" alt="Barbacoa Tatemada El Vale" class="login-logo">
+            </div>
+            <h2 class="login-title">Acceso Administrativo</h2>
+            <p class="login-subtitle">Ingresa tus credenciales para gestionar precios, disponibilidad e imágenes.</p>
+            
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group" style="margin-bottom: 1.2rem;">
+                    <label for="username" class="form-label" style="display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--dark-brown);">Usuario</label>
+                    <input type="text" id="username" class="form-control" placeholder="Ingresa tu usuario" required autocomplete="username">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+                    <label for="password" class="form-label" style="display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--dark-brown);">Contraseña</label>
+                    <input type="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required autocomplete="current-password" style="padding-right: 2.8rem;">
+                    <button type="button" id="toggle-password" class="btn-toggle-password" onclick="togglePasswordVisibility()" aria-label="Mostrar contraseña">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="login-error" class="login-error-msg" style="display: none;">
+                    ❌ Usuario o contraseña incorrectos.
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    Entrar al Panel
+                </button>
+            </form>
         </div>
-    </header>
+    </div>
+
+    <!-- Wrapper del Panel Admin Real -->
+    <div id="admin-panel-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-container">
+                <a href="/" class="logo-link">
+                    <img src="../assets/images/logo.png" alt="Barbacoa Tatemada El Vale" class="logo-img">
+                    <span class="logo-text">Panel Administrativo</span>
+                </a>
+                <div style="display: flex; gap: 0.8rem;">
+                    <a href="/sistema-pedidos/" class="btn-back">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Regresar a pedidos
+                    </a>
+                    <button type="button" class="btn-logout" onclick="handleLogout()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </header>
 
     <div class="admin-container">
         <!-- Tarjeta de bienvenida y descripción -->
@@ -730,6 +956,7 @@ function doGet(e) {
             </div>
         </div>
     </footer>
+    </div>
 
     <!-- Scripts -->
     <script src="menu-data.js"></script>

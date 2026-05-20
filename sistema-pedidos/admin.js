@@ -545,3 +545,80 @@ window.saveBankDetails = function() {
 
     showToast('✅ ¡Datos bancarios guardados con éxito!');
 };
+
+// ==========================================
+// FUNCIONES DE CONTROL DE ACCESO (LOGIN / LOGOUT)
+// ==========================================
+
+window.handleLogin = function(event) {
+    event.preventDefault();
+    const userEl = document.getElementById('username');
+    const passEl = document.getElementById('password');
+    const errorEl = document.getElementById('login-error');
+    
+    if (!userEl || !passEl) return;
+    
+    const username = userEl.value.trim();
+    const password = passEl.value;
+    
+    // Credenciales requeridas: barbacoa / tatemada
+    if (username === 'barbacoa' && password === 'tatemada') {
+        if (errorEl) errorEl.style.display = 'none';
+        localStorage.setItem('valetatemada_admin_logged_in', 'true');
+        document.body.classList.add('admin-logged-in');
+        
+        // Mostrar saludo premium con toast
+        showToast("🔓 ¡Acceso concedido! Bienvenido al panel.");
+        
+        // Limpiar formulario
+        userEl.value = '';
+        passEl.value = '';
+    } else {
+        if (errorEl) {
+            errorEl.style.display = 'block';
+            // Efecto de vibración/shake al contenedor de error
+            errorEl.style.animation = 'none';
+            errorEl.offsetHeight; /* trigger reflow */
+            errorEl.style.animation = 'loginShake 0.4s ease';
+        }
+        showToast("❌ Credenciales incorrectas.");
+    }
+};
+
+window.togglePasswordVisibility = function() {
+    const passEl = document.getElementById('password');
+    const toggleBtn = document.getElementById('toggle-password');
+    if (!passEl) return;
+    
+    if (passEl.type === 'password') {
+        passEl.type = 'text';
+        if (toggleBtn) {
+            toggleBtn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+            `;
+        }
+    } else {
+        passEl.type = 'password';
+        if (toggleBtn) {
+            toggleBtn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+            `;
+        }
+    }
+};
+
+window.handleLogout = function() {
+    const confirmLogout = confirm("¿Estás seguro de que quieres cerrar la sesión de administración?");
+    if (confirmLogout) {
+        localStorage.removeItem('valetatemada_admin_logged_in');
+        document.body.classList.remove('admin-logged-in');
+        showToast("🔒 Sesión cerrada correctamente.");
+    }
+};
+
