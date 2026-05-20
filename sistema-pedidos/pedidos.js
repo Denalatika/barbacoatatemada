@@ -633,6 +633,9 @@ function sendOrderToWhatsApp() {
         // Guardar el perfil de contacto del cliente para futuros pedidos (Autocompletado)
         saveCustomerProfileLocal();
         
+        // Limpiar el carrito de compras para que al volver de WhatsApp la página esté vacía
+        clearCart();
+        
         // Abrir WhatsApp de forma robusta e inmune a bloqueadores de ventanas emergentes
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         if (isMobile) {
