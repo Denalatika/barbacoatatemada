@@ -20,6 +20,28 @@ const MEAT_OPTION_PRODUCTS = [
 ];
 let currentAddingProductId = null;
 
+// Configuración de opciones de bebidas y precios correctos
+const DRINKS_OPTIONS = {
+    'coca-cola': { name: 'Coca Cola', price: 35, icon: '🥤' },
+    'coca-light': { name: 'Coca Light', price: 35, icon: '🥤' },
+    'fanta-fresa': { name: 'Fanta Fresa', price: 35, icon: '🍓' },
+    'fanta-naranja': { name: 'Fanta Naranja', price: 35, icon: '🍊' },
+    'limonada': { name: 'Agua fresca Limonada', price: 30, icon: '🍋' },
+    'jamaica': { name: 'Agua fresca Jamaica', price: 30, icon: '🌺' },
+    'cafe-10oz': { name: 'Café de olla 10oz', price: 30, icon: '☕' },
+    'cafe-16oz': { name: 'Café de olla 16oz', price: 50, icon: '☕' },
+    'agua-botella': { name: 'Agua embotellada', price: 25, icon: '💧' }
+};
+
+const DRINKS_GROUPS = [
+    { title: 'Refrescos ($35 MXN)', items: ['coca-cola', 'coca-light', 'fanta-fresa', 'fanta-naranja'] },
+    { title: 'Aguas Frescas ($30 MXN)', items: ['limonada', 'jamaica'] },
+    { title: 'Café de Olla', items: ['cafe-10oz', 'cafe-16oz'] },
+    { title: 'Agua Embotellada ($25 MXN)', items: ['agua-botella'] }
+];
+
+let tempDrinkSelections = {};
+
 // Elementos del DOM
 const menuGrid = document.getElementById('menu-grid');
 const categoriesContainer = document.getElementById('categories-container');
@@ -206,6 +228,30 @@ function setupListeners() {
         });
     }
 
+    // Modal de selección de bebidas
+    const drinkModal = document.getElementById('drink-select-modal');
+    const btnCloseDrinkModal = document.getElementById('btn-close-drink-modal');
+    const btnConfirmDrink = document.getElementById('btn-confirm-drink');
+    
+    if (drinkModal && btnCloseDrinkModal && btnConfirmDrink) {
+        // Cerrar modal
+        btnCloseDrinkModal.addEventListener('click', () => {
+            drinkModal.classList.remove('active');
+        });
+        
+        // Cerrar al dar click fuera
+        drinkModal.addEventListener('click', (e) => {
+            if (e.target === drinkModal) {
+                drinkModal.classList.remove('active');
+            }
+        });
+        
+        // Confirmar selección
+        btnConfirmDrink.addEventListener('click', () => {
+            confirmDrinkSelections();
+        });
+    }
+
     // Máscara inteligente para fecha de nacimiento (DD/MM/AA) sin escribir diagonales
     const dobInput = document.getElementById('customer_dob');
     if (dobInput) {
@@ -281,11 +327,14 @@ function renderMenu() {
         card.className = `product-card ${product.popular ? 'popular' : ''}`;
         
         // Formatear precio
-        const priceLabel = product.price !== null ? `$${product.price}` : 'Consultar precio';
+        let priceLabel = product.price !== null ? `$${product.price}` : 'Consultar precio';
+        if (product.id === 'bebidas') {
+            priceLabel = 'Desde $25';
+        }
         const priceClass = product.price !== null ? '' : 'null';
         
         // Comprobar si el producto ya está en el carrito para mostrar el control de cantidad o agregar
-        const isMeatOptionProduct = MEAT_OPTION_PRODUCTS.includes(product.id);
+        const isMeatOptionProduct = MEAT_OPTION_PRODUCTS.includes(product.id) || product.id === 'bebidas';
         const quantityInCart = cart
             .filter(item => item.id === product.id || item.id.startsWith(product.id + '_'))
             .reduce((sum, item) => sum + item.quantity, 0);
@@ -351,6 +400,12 @@ function addToCart(productId) {
     // Si es un producto con opción de carne, abrimos el modal
     if (MEAT_OPTION_PRODUCTS.includes(productId)) {
         openMeatSelectModal(productId);
+        return;
+    }
+    
+    // Si es el catálogo de Bebidas general, abrimos el modal de selección de bebidas
+    if (productId === 'bebidas') {
+        openDrinkSelectModal();
         return;
     }
     
@@ -421,6 +476,184 @@ function addMeatProductToCart(productId, selectedMeat) {
     renderMenu();
     renderCart();
     showToast(`Se agregó "${product.name} (${selectedMeat})" a tu pedido.`);
+}
+
+// NUEVA FUNCIÓN: Abrir modal de bebidas de forma interactiva con selector múltiple
+function openDrinkSelectModal() {
+    // 1. Poblamos tempDrinkSelections con lo que ya está en el carrito
+    tempDrinkSelections = {};
+    
+    // Inicializar todas las opciones en 0
+    Object.keys(DRINKS_OPTIONS).forEach(key => {
+        tempDrinkSelections[key] = 0;
+    });
+    
+    // Leer del carrito para actualizar cantidades
+    cart.forEach(item => {
+        if (item.id.startsWith('bebidas_')) {
+            const key = item.id.replace('bebidas_', '');
+            if (DRINKS_OPTIONS[key]) {
+                tempDrinkSelections[key] = item.quantity;
+            }
+        }
+    });
+    
+    // 2. Renderizar dinámicamente el HTML de las bebidas agrupadas por categoría
+    const container = document.getElementById('drink-options-container');
+    if (container) {
+        container.innerHTML = '';
+        
+        DRINKS_GROUPS.forEach(group => {
+            // Título de la categoría
+            const groupTitle = document.createElement('h4');
+            groupTitle.className = 'drink-group-title';
+            groupTitle.style.cssText = 'margin-top: 1.2rem; margin-bottom: 0.6rem; color: var(--dark-brown); font-family: var(--font-heading); font-size: 1rem; border-bottom: 1px dashed rgba(184, 92, 44, 0.15); padding-bottom: 0.25rem;';
+            groupTitle.textContent = group.title;
+            container.appendChild(groupTitle);
+            
+            // Grid de opciones
+            const grid = document.createElement('div');
+            grid.className = 'drink-options-grid';
+            
+            group.items.forEach(key => {
+                const drink = DRINKS_OPTIONS[key];
+                if (!drink) return;
+                
+                const qty = tempDrinkSelections[key] || 0;
+                const hasQtyClass = qty > 0 ? 'has-qty' : '';
+                
+                const card = document.createElement('div');
+                card.className = `drink-option-card ${hasQtyClass}`;
+                card.setAttribute('data-drink-card', key);
+                
+                card.innerHTML = `
+                    <div class="drink-option-card-content">
+                        <div style="display: flex; align-items: center; gap: 0.6rem; min-width: 0;">
+                            <span class="drink-icon">${drink.icon}</span>
+                            <div class="drink-info">
+                                <span class="drink-name" title="${drink.name}">${drink.name}</span>
+                                <span class="drink-price">$${drink.price} MXN</span>
+                            </div>
+                        </div>
+                        <div class="drink-qty-control">
+                            <button type="button" class="btn-drink-qty" onclick="changeDrinkQty('${key}', -1)" aria-label="Disminuir">-</button>
+                            <span class="drink-qty-val" id="qty-val-${key}">${qty}</span>
+                            <button type="button" class="btn-drink-qty" onclick="changeDrinkQty('${key}', 1)" aria-label="Aumentar">+</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            container.appendChild(grid);
+        });
+    }
+    
+    // 3. Abrir el modal agregando la clase active
+    const modal = document.getElementById('drink-select-modal');
+    if (modal) {
+        modal.classList.add('active');
+    }
+    
+    // 4. Actualizar el botón de confirmación inferior
+    updateDrinkModalConfirmButton();
+}
+
+// NUEVA FUNCIÓN: Modificar cantidad de una bebida en el modal
+function changeDrinkQty(key, change) {
+    if (!DRINKS_OPTIONS[key]) return;
+    
+    const currentQty = tempDrinkSelections[key] || 0;
+    let newQty = currentQty + change;
+    if (newQty < 0) newQty = 0;
+    if (newQty > 99) newQty = 99; // Límite razonable por bebida
+    
+    tempDrinkSelections[key] = newQty;
+    
+    // Actualizar el DOM para esa bebida específica
+    const qtyValEl = document.getElementById(`qty-val-${key}`);
+    if (qtyValEl) {
+        qtyValEl.textContent = newQty;
+    }
+    
+    const cardEl = document.querySelector(`[data-drink-card="${key}"]`);
+    if (cardEl) {
+        if (newQty > 0) {
+            cardEl.classList.add('has-qty');
+        } else {
+            cardEl.classList.remove('has-qty');
+        }
+    }
+    
+    // Actualizar el botón de confirmación inferior
+    updateDrinkModalConfirmButton();
+}
+
+// NUEVA FUNCIÓN: Actualizar el estado del botón de confirmación del modal
+function updateDrinkModalConfirmButton() {
+    const btnConfirmDrink = document.getElementById('btn-confirm-drink');
+    if (!btnConfirmDrink) return;
+    
+    let totalQty = 0;
+    let totalPrice = 0;
+    
+    Object.keys(tempDrinkSelections).forEach(key => {
+        const qty = tempDrinkSelections[key];
+        if (qty > 0 && DRINKS_OPTIONS[key]) {
+            totalQty += qty;
+            totalPrice += qty * DRINKS_OPTIONS[key].price;
+        }
+    });
+    
+    if (totalQty === 0) {
+        btnConfirmDrink.textContent = 'Confirmar';
+    } else {
+        btnConfirmDrink.textContent = `Confirmar y agregar (${totalQty} ${totalQty === 1 ? 'bebida' : 'bebidas'} - $${totalPrice} MXN)`;
+    }
+}
+
+// NUEVA FUNCIÓN: Confirmar las bebidas seleccionadas y guardarlas en el carrito
+function confirmDrinkSelections() {
+    // 1. Recorrer la selección temporal y sincronizar con el carrito
+    Object.keys(tempDrinkSelections).forEach(key => {
+        const qty = tempDrinkSelections[key];
+        const cartItemId = 'bebidas_' + key;
+        const existingItemIndex = cart.findIndex(item => item.id === cartItemId);
+        
+        if (qty > 0) {
+            const option = DRINKS_OPTIONS[key];
+            if (existingItemIndex !== -1) {
+                // Actualizar cantidad
+                cart[existingItemIndex].quantity = qty;
+            } else {
+                // Agregar nuevo item
+                cart.push({
+                    id: cartItemId,
+                    name: option.name,
+                    category: 'Bebidas',
+                    price: option.price,
+                    quantity: qty
+                });
+            }
+        } else {
+            // Si la cantidad es 0, lo quitamos del carrito si es que existía
+            if (existingItemIndex !== -1) {
+                cart.splice(existingItemIndex, 1);
+            }
+        }
+    });
+    
+    // 2. Guardar y actualizar interfaces
+    saveCartToLocalStorage();
+    renderMenu();
+    renderCart();
+    
+    const drinkModal = document.getElementById('drink-select-modal');
+    if (drinkModal) {
+        drinkModal.classList.remove('active');
+    }
+    
+    showToast('Bebidas actualizadas correctamente.');
 }
 
 // 4. INCREMENTAR CANTIDAD EN EL CARRITO

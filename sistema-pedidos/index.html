@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Estilos -->
-    <link rel="stylesheet" href="pedidos.css?v=1.0.9">
+    <link rel="stylesheet" href="pedidos.css?v=1.1.1">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
@@ -342,136 +342,18 @@
     <div class="drink-select-modal" id="drink-select-modal" role="dialog" aria-modal="true" aria-labelledby="drink-modal-title">
         <div class="drink-select-modal-content">
             <div class="drink-select-modal-header">
-                <h3 id="drink-modal-title" style="margin: 0; color: var(--dark-brown); font-family: var(--font-heading); font-size: 1.3rem;">Elige tu bebida</h3>
+                <h3 id="drink-modal-title" style="margin: 0; color: var(--dark-brown); font-family: var(--font-heading); font-size: 1.3rem;">Elige tus bebidas</h3>
                 <button type="button" class="btn-close-drink-modal" id="btn-close-drink-modal" aria-label="Cerrar modal">&times;</button>
             </div>
             <div class="drink-select-body">
-                <p class="drink-select-description">Selecciona una opción de bebida fría o caliente para acompañar tu comida:</p>
-                <div class="drink-options-container">
-                    
-                    <!-- Refrescos -->
-                    <div class="drink-group">
-                        <h4 class="drink-group-title">Refrescos ($35 MXN)</h4>
-                        <div class="drink-options-grid">
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="coca-cola" checked>
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">🥤</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Coca Cola</span>
-                                        <span class="drink-price">$35</span>
-                                    </div>
-                                </div>
-                            </label>
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="coca-light">
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">🥤</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Coca Light</span>
-                                        <span class="drink-price">$35</span>
-                                    </div>
-                                </div>
-                            </label>
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="fanta-fresa">
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">🍓</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Fanta Fresa</span>
-                                        <span class="drink-price">$35</span>
-                                    </div>
-                                </div>
-                            </label>
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="fanta-naranja">
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">🍊</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Fanta Naranja</span>
-                                        <span class="drink-price">$35</span>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <!-- Aguas Frescas -->
-                    <div class="drink-group">
-                        <h4 class="drink-group-title">Aguas Frescas ($30 MXN)</h4>
-                        <div class="drink-options-grid">
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="limonada">
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">🍋</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Limonada</span>
-                                        <span class="drink-price">$30</span>
-                                    </div>
-                                </div>
-                            </label>
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="jamaica">
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">🌺</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Jamaica</span>
-                                        <span class="drink-price">$30</span>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <!-- Café de Olla -->
-                    <div class="drink-group">
-                        <h4 class="drink-group-title">Café de Olla</h4>
-                        <div class="drink-options-grid">
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="cafe-10oz">
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">☕</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Café de Olla (10oz)</span>
-                                        <span class="drink-price">$30</span>
-                                    </div>
-                                </div>
-                            </label>
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="cafe-16oz">
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">☕</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Café de Olla (16oz)</span>
-                                        <span class="drink-price">$50</span>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <!-- Agua Embotellada -->
-                    <div class="drink-group">
-                        <h4 class="drink-group-title">Agua Embotellada ($25 MXN)</h4>
-                        <div class="drink-options-grid">
-                            <label class="drink-option-card">
-                                <input type="radio" name="drink-selection" value="agua-botella">
-                                <div class="drink-option-card-content">
-                                    <span class="drink-icon">💧</span>
-                                    <div class="drink-info">
-                                        <span class="drink-name">Agua embotellada</span>
-                                        <span class="drink-price">$25</span>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
+                <p class="drink-select-description">Agrega una o más bebidas frías o calientes para acompañar tu comida:</p>
+                <div class="drink-options-container" id="drink-options-container">
+                    <!-- Las bebidas y sus selectores de cantidad se cargarán dinámicamente aquí -->
                 </div>
             </div>
             <div class="drink-select-footer">
                 <button type="button" class="btn-confirm-drink" id="btn-confirm-drink">
-                    Confirmar y agregar
+                    Confirmar
                 </button>
             </div>
         </div>
@@ -495,7 +377,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="menu-data.js"></script>
-    <script src="pedidos.js?v=1.0.9"></script>
+    <script src="menu-data.js?v=1.1.1"></script>
+    <script src="pedidos.js?v=1.1.1"></script>
 </body>
 </html>

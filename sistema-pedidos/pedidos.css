@@ -1636,6 +1636,14 @@ textarea.form-control {
     flex-shrink: 0;
 }
 
+.drink-select-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
 .drink-options-container {
     flex-grow: 1;
     overflow-y: auto;
@@ -1680,26 +1688,20 @@ textarea.form-control {
 
 .drink-options-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     gap: 0.6rem;
+    width: 100%;
 }
 
 .drink-option-card {
     display: block;
-    cursor: pointer;
     position: relative;
-}
-
-.drink-option-card input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
 }
 
 .drink-option-card-content {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0.75rem 0.9rem;
     border: 1px solid rgba(31, 18, 11, 0.12);
     border-radius: var(--radius-sm);
@@ -1745,25 +1747,67 @@ textarea.form-control {
     font-weight: 600;
 }
 
-/* Efectos hover y checked */
-.drink-option-card:hover .drink-option-card-content {
+/* Controles de cantidad integrados en las tarjetas de bebidas */
+.drink-qty-control {
+    display: flex;
+    align-items: center;
+    background-color: var(--soft-gray);
+    border-radius: var(--radius-sm);
+    padding: 0.15rem;
+    border: 1px solid rgba(31, 18, 11, 0.05);
+    flex-shrink: 0;
+}
+
+.btn-drink-qty {
+    width: 26px;
+    height: 26px;
+    border: none;
+    background-color: var(--white);
+    color: var(--dark-brown);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.15s ease;
+}
+
+.btn-drink-qty:hover {
+    background-color: var(--burnt-orange);
+    color: var(--white);
+}
+
+.drink-qty-val {
+    width: 26px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--dark-brown);
+}
+
+/* Efectos hover y estado activo (con cantidad > 0) */
+.drink-option-card-content:hover {
     border-color: rgba(184, 92, 44, 0.3);
     background-color: var(--soft-gray);
 }
 
-.drink-option-card input[type="radio"]:checked + .drink-option-card-content {
+.drink-option-card.has-qty .drink-option-card-content {
     border-color: var(--burnt-orange);
     background-color: var(--cream);
     box-shadow: var(--shadow-sm);
 }
 
-.drink-option-card input[type="radio"]:checked + .drink-option-card-content .drink-icon {
+.drink-option-card.has-qty .drink-icon {
     background-color: var(--burnt-orange);
     border-color: var(--burnt-orange);
+    color: var(--white);
     transform: scale(1.05);
 }
 
-.drink-option-card input[type="radio"]:checked + .drink-option-card-content .drink-name {
+.drink-option-card.has-qty .drink-name {
     color: var(--burnt-orange);
 }
 
@@ -1809,7 +1853,7 @@ textarea.form-control {
         box-shadow: 0 -8px 24px rgba(0,0,0,0.15);
     }
     .drink-options-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 0.5rem;
     }
     .drink-option-card-content {
