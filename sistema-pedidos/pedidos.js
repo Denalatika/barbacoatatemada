@@ -5,6 +5,21 @@ let cart = [];
 let selectedCategory = 'Todas';
 let activeMenuData = []; // Catálogo activo (puede cargarse del original o de localStorage)
 
+// Configuración de opciones de carne
+const MEAT_OPTION_PRODUCTS = [
+    'orden-barbacoa',
+    'media-barbacoa',
+    'tacos-sencillos',
+    'tapatia',
+    'taco-charreado',
+    'chapala-especial',
+    'charro',
+    'mariachis',
+    'burrito',
+    'taco-fundido'
+];
+let currentAddingProductId = null;
+
 // Elementos del DOM
 const menuGrid = document.getElementById('menu-grid');
 const categoriesContainer = document.getElementById('categories-container');
@@ -83,18 +98,16 @@ function setupListeners() {
     deliveryOptions.forEach(option => {
         option.addEventListener('change', (e) => {
             const addressField = document.getElementById('address-field');
-            const locationField = document.getElementById('group-location');
             if (e.target.value === 'A domicilio') {
                 addressField.classList.add('visible');
-                if (locationField) locationField.classList.add('visible');
                 document.getElementById('address').setAttribute('required', 'true');
             } else {
                 addressField.classList.remove('visible');
-                if (locationField) locationField.classList.remove('visible');
                 document.getElementById('address').removeAttribute('required');
             }
             updateOrderSummary();
             updateStepIndicator();
+            renderCart(); // Actualizar carrito de inmediato para mostrar/ocultar cargo de envío y recalcular total
         });
     });
 
@@ -159,6 +172,37 @@ function setupListeners() {
             if (e.target === mobileCartModal) {
                 mobileCartModal.classList.remove('active');
             }
+        });
+    }
+
+    // Modal de selección de carne
+    const meatModal = document.getElementById('meat-select-modal');
+    const btnCloseMeatModal = document.getElementById('btn-close-meat-modal');
+    const btnConfirmMeat = document.getElementById('btn-confirm-meat');
+    
+    if (meatModal && btnCloseMeatModal && btnConfirmMeat) {
+        // Cerrar modal
+        btnCloseMeatModal.addEventListener('click', () => {
+            meatModal.classList.remove('active');
+            currentAddingProductId = null;
+        });
+        
+        // Cerrar al dar click fuera
+        meatModal.addEventListener('click', (e) => {
+            if (e.target === meatModal) {
+                meatModal.classList.remove('active');
+                currentAddingProductId = null;
+            }
+        });
+        
+        // Confirmar selección
+        btnConfirmMeat.addEventListener('click', () => {
+            const selectedRadio = document.querySelector('input[name="meat-selection"]:checked');
+            if (selectedRadio && currentAddingProductId) {
+                addMeatProductToCart(currentAddingProductId, selectedRadio.value);
+            }
+            meatModal.classList.remove('active');
+            currentAddingProductId = null;
         });
     }
 
@@ -241,24 +285,38 @@ function renderMenu() {
         const priceClass = product.price !== null ? '' : 'null';
         
         // Comprobar si el producto ya está en el carrito para mostrar el control de cantidad o agregar
-        const cartItem = cart.find(item => item.id === product.id);
+        const isMeatOptionProduct = MEAT_OPTION_PRODUCTS.includes(product.id);
+        const quantityInCart = cart
+            .filter(item => item.id === product.id || item.id.startsWith(product.id + '_'))
+            .reduce((sum, item) => sum + item.quantity, 0);
         
         let actionHTML = '';
-        if (cartItem) {
-            actionHTML = `
-                <div class="quantity-control">
-                    <button type="button" class="btn-qty" onclick="decreaseQuantity('${product.id}')" aria-label="Disminuir cantidad">-</button>
-                    <span class="qty-val">${cartItem.quantity}</span>
-                    <button type="button" class="btn-qty" onclick="increaseQuantity('${product.id}')" aria-label="Aumentar cantidad">+</button>
-                </div>
-            `;
-        } else {
+        if (isMeatOptionProduct) {
+            const btnText = quantityInCart > 0 ? `Agregar otro (${quantityInCart})` : 'Agregar';
             actionHTML = `
                 <button type="button" class="btn-add-cart" onclick="addToCart('${product.id}')">
-                    Agregar 
+                    ${btnText}
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </button>
             `;
+        } else {
+            const cartItem = cart.find(item => item.id === product.id);
+            if (cartItem) {
+                actionHTML = `
+                    <div class="quantity-control">
+                        <button type="button" class="btn-qty" onclick="decreaseQuantity('${product.id}')" aria-label="Disminuir cantidad">-</button>
+                        <span class="qty-val">${cartItem.quantity}</span>
+                        <button type="button" class="btn-qty" onclick="increaseQuantity('${product.id}')" aria-label="Aumentar cantidad">+</button>
+                    </div>
+                `;
+            } else {
+                actionHTML = `
+                    <button type="button" class="btn-add-cart" onclick="addToCart('${product.id}')">
+                        Agregar 
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                `;
+            }
         }
 
         // Obtener imagen del catálogo (usar un placeholder genérico o de logo en caso de no existir)
@@ -290,6 +348,12 @@ function addToCart(productId) {
     const product = activeMenuData.find(p => p.id === productId);
     if (!product) return;
     
+    // Si es un producto con opción de carne, abrimos el modal
+    if (MEAT_OPTION_PRODUCTS.includes(productId)) {
+        openMeatSelectModal(productId);
+        return;
+    }
+    
     const existingItem = cart.find(item => item.id === productId);
     if (existingItem) {
         existingItem.quantity += 1;
@@ -307,6 +371,56 @@ function addToCart(productId) {
     renderMenu();
     renderCart();
     showToast(`Se agregó "${product.name}" a tu pedido.`);
+}
+
+// NUEVA FUNCIÓN: Abrir modal de carne
+function openMeatSelectModal(productId) {
+    const product = activeMenuData.find(p => p.id === productId);
+    if (!product) return;
+    
+    currentAddingProductId = productId;
+    
+    const productNameEl = document.getElementById('meat-select-product-name');
+    if (productNameEl) {
+        productNameEl.textContent = product.name;
+    }
+    
+    // Resetear a Barbacoa seleccionado por defecto
+    const defaultRadio = document.querySelector('input[name="meat-selection"][value="Barbacoa"]');
+    if (defaultRadio) {
+        defaultRadio.checked = true;
+    }
+    
+    const modal = document.getElementById('meat-select-modal');
+    if (modal) {
+        modal.classList.add('active');
+    }
+}
+
+// NUEVA FUNCIÓN: Confirmar carne y agregar al carrito
+function addMeatProductToCart(productId, selectedMeat) {
+    const product = activeMenuData.find(p => p.id === productId);
+    if (!product) return;
+    
+    const cartItemId = productId + '_' + selectedMeat;
+    const existingItem = cart.find(item => item.id === cartItemId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: cartItemId,
+            name: `${product.name} (${selectedMeat})`,
+            category: product.category,
+            price: product.price,
+            quantity: 1
+        });
+    }
+    
+    saveCartToLocalStorage();
+    renderMenu();
+    renderCart();
+    showToast(`Se agregó "${product.name} (${selectedMeat})" a tu pedido.`);
 }
 
 // 4. INCREMENTAR CANTIDAD EN EL CARRITO
@@ -350,7 +464,24 @@ function removeFromCart(productId) {
     }
 }
 
-// OBTENER TOTAL DEL PEDIDO FORMATEADO
+// OBTENER SUBTOTAL DEL PEDIDO (sin envío)
+function getCartSubtotalText() {
+    let total = 0;
+    let hasNull = false;
+    cart.forEach(item => {
+        if (item.price !== null) {
+            total += item.price * item.quantity;
+        } else {
+            hasNull = true;
+        }
+    });
+    if (hasNull) {
+        return `$${total} (monto parcial)`;
+    }
+    return `$${total}`;
+}
+
+// OBTENER TOTAL DEL PEDIDO FORMATEADO (incluyendo envío si aplica)
 function getCartTotalText() {
     let total = 0;
     let hasNull = false;
@@ -361,6 +492,15 @@ function getCartTotalText() {
             hasNull = true;
         }
     });
+    
+    // Sumar costo de envío ($60) si es a domicilio
+    const deliveryTypeInput = document.querySelector('input[name="delivery_type"]:checked');
+    const isDelivery = deliveryTypeInput && deliveryTypeInput.value === 'A domicilio';
+    
+    if (isDelivery && total > 0) {
+        total += 60;
+    }
+    
     if (hasNull) {
         return `$${total} (monto parcial, consultar precios)`;
     }
@@ -405,10 +545,36 @@ function renderCart() {
             cartItemsContainer.appendChild(itemElement);
         });
 
+        // Sumar costo de envío ($60) si es a domicilio
+        const deliveryTypeInput = document.querySelector('input[name="delivery_type"]:checked');
+        const isDelivery = deliveryTypeInput && deliveryTypeInput.value === 'A domicilio';
+
+        if (isDelivery) {
+            // Fila de subtotal
+            const subtotalElement = document.createElement('div');
+            subtotalElement.className = 'cart-subtotal-row';
+            subtotalElement.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding-top: 0.8rem; margin-top: 0.5rem; border-top: 2px solid var(--cream); font-size: 0.95rem; color: rgba(31, 18, 11, 0.7);';
+            subtotalElement.innerHTML = `
+                <span>Subtotal:</span>
+                <span>${getCartSubtotalText()}</span>
+            `;
+            cartItemsContainer.appendChild(subtotalElement);
+
+            // Fila de envío
+            const deliveryElement = document.createElement('div');
+            deliveryElement.className = 'cart-delivery-row';
+            deliveryElement.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding-top: 0.4rem; font-size: 0.95rem; color: rgba(31, 18, 11, 0.7);';
+            deliveryElement.innerHTML = `
+                <span>Servicio a domicilio:</span>
+                <span>$60</span>
+            `;
+            cartItemsContainer.appendChild(deliveryElement);
+        }
+
         // Agregar fila del total en el carrito de escritorio
         const totalElement = document.createElement('div');
         totalElement.className = 'cart-total-row';
-        totalElement.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; margin-top: 0.5rem; border-top: 2px solid var(--cream); font-weight: 700; font-size: 1.1rem; color: var(--dark-brown);';
+        totalElement.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding-top: 0.6rem; margin-top: 0.4rem; ${isDelivery ? '' : 'border-top: 2px solid var(--cream);'} font-weight: 700; font-size: 1.1rem; color: var(--dark-brown);`;
         totalElement.innerHTML = `
             <span>Total del Pedido:</span>
             <span style="color: var(--burnt-orange); font-size: 1.25rem;">${getCartTotalText()}</span>
@@ -474,10 +640,36 @@ function renderCartModalList() {
             modalItemsContainer.appendChild(itemElement);
         });
 
+        // Sumar costo de envío ($60) si es a domicilio
+        const deliveryTypeInput = document.querySelector('input[name="delivery_type"]:checked');
+        const isDelivery = deliveryTypeInput && deliveryTypeInput.value === 'A domicilio';
+
+        if (isDelivery) {
+            // Fila de subtotal
+            const subtotalElement = document.createElement('div');
+            subtotalElement.className = 'cart-subtotal-row';
+            subtotalElement.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding-top: 0.8rem; margin-top: 0.5rem; border-top: 2px solid var(--cream); font-size: 0.95rem; color: rgba(31, 18, 11, 0.7);';
+            subtotalElement.innerHTML = `
+                <span>Subtotal:</span>
+                <span>${getCartSubtotalText()}</span>
+            `;
+            modalItemsContainer.appendChild(subtotalElement);
+
+            // Fila de envío
+            const deliveryElement = document.createElement('div');
+            deliveryElement.className = 'cart-delivery-row';
+            deliveryElement.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding-top: 0.4rem; font-size: 0.95rem; color: rgba(31, 18, 11, 0.7);';
+            deliveryElement.innerHTML = `
+                <span>Servicio a domicilio:</span>
+                <span>$60</span>
+            `;
+            modalItemsContainer.appendChild(deliveryElement);
+        }
+
         // Agregar fila del total en el carrito móvil
         const totalElement = document.createElement('div');
         totalElement.className = 'cart-total-row';
-        totalElement.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; margin-top: 0.5rem; border-top: 2px solid var(--cream); font-weight: 700; font-size: 1.1rem; color: var(--dark-brown);';
+        totalElement.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding-top: 0.6rem; margin-top: 0.4rem; ${isDelivery ? '' : 'border-top: 2px solid var(--cream);'} font-weight: 700; font-size: 1.1rem; color: var(--dark-brown);`;
         totalElement.innerHTML = `
             <span>Total del Pedido:</span>
             <span style="color: var(--burnt-orange); font-size: 1.25rem;">${getCartTotalText()}</span>
@@ -575,7 +767,6 @@ function buildWhatsAppMessage() {
     const dob = document.getElementById('customer_dob').value.trim() || 'No proporcionada';
     const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
     const address = deliveryType === 'A domicilio' ? document.getElementById('address').value.trim() : 'N/A (Para recoger)';
-    const locationLink = document.getElementById('location_link').value.trim() || 'No proporcionado';
     const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
     
     let transferStatus = 'N/A';
@@ -600,13 +791,13 @@ Teléfono: ${phone}
 Fecha de Nacimiento: ${dob} (para futuras promociones)
 Tipo de pedido: ${deliveryType}
 Dirección: ${address}
-Ubicación o referencia: ${locationLink}
 Método de pago: ${paymentMethod}
 Estado de transferencia: ${transferStatus}
 
 PEDIDO:
 ${orderItemsText}
 TOTAL DEL PEDIDO: ${getCartTotalText()}
+${deliveryType === 'A domicilio' ? 'Costo de envío: $60 (ya sumado al total)\n' : ''}
 NOTAS:
 ${notes}
 
@@ -747,6 +938,12 @@ function updateOrderSummary() {
             </span>
         </div>
         ` : ''}
+        ${deliveryType === 'A domicilio' ? `
+        <div class="summary-row" style="animation: fadeIn 0.3s ease; font-size: 0.95rem; color: rgba(31, 18, 11, 0.75);">
+            <span class="summary-label">Costo de envío:</span>
+            <span class="summary-val">$60</span>
+        </div>
+        ` : ''}
         <div class="summary-row total-row" style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px dashed rgba(31, 18, 11, 0.15); font-weight: 700; font-size: 1.15rem; color: var(--dark-brown); display: flex; justify-content: space-between; align-items: center;">
             <span class="summary-label">Total del Pedido:</span>
             <span class="summary-val" style="color: var(--burnt-orange); font-size: 1.25rem;">${getCartTotalText()}</span>
@@ -874,7 +1071,7 @@ function saveCustomerForFutureDatabase() {
         const dob = document.getElementById('customer_dob').value.trim() || 'No proporcionada';
         const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
         const address = deliveryType === 'A domicilio' ? document.getElementById('address').value.trim() : 'N/A (Para recoger)';
-        const locationLink = document.getElementById('location_link').value.trim() || 'No proporcionado';
+        const locationLink = 'No proporcionado';
         const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
         
         let transferStatus = 'N/A';
@@ -949,7 +1146,6 @@ function saveCustomerProfileLocal() {
         const deliveryType = deliveryTypeInput ? deliveryTypeInput.value : '';
         
         const address = document.getElementById('address').value.trim();
-        const locationLink = document.getElementById('location_link').value.trim();
         
         const paymentMethodInput = document.querySelector('input[name="payment_method"]:checked');
         const paymentMethod = paymentMethodInput ? paymentMethodInput.value : '';
@@ -960,7 +1156,6 @@ function saveCustomerProfileLocal() {
             dob: dob, // Guardar fecha de nacimiento
             delivery_type: deliveryType,
             address: address,
-            location_link: locationLink,
             payment_method: paymentMethod,
             last_updated: new Date().toISOString()
         };
@@ -988,7 +1183,6 @@ function loadCustomerProfileLocal() {
         if (profile.phone) document.getElementById('customer_phone').value = profile.phone;
         if (profile.dob) document.getElementById('customer_dob').value = profile.dob;
         if (profile.address) document.getElementById('address').value = profile.address;
-        if (profile.location_link) document.getElementById('location_link').value = profile.location_link;
         
         // Auto-seleccionar Tipo de Entrega
         if (profile.delivery_type) {

@@ -137,6 +137,16 @@ const MENU_DATA = [
     "popular": false
   },
   {
+    "id": "mariachis",
+    "name": "Mariachis",
+    "category": "Especialidades",
+    "description": "Preparado con costra de queso y chile verde tatemado con la carne de tu elección: Barbacoa, Cabeza o Chicharrón.",
+    "price": 80,
+    "image": "../assets/images/hero_barbacoa.png",
+    "available": true,
+    "popular": true
+  },
+  {
     "id": "chilaquiles-barbacoa",
     "name": "Chilaquiles",
     "category": "Especialidades",

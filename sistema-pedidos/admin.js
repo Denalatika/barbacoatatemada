@@ -1,7 +1,7 @@
 // Lógica del Panel de Administración - Barbacoa Tatemada El Vale
 
 let currentMenu = [];
-const categories = ['Órdenes', 'Tacos', 'Burritos', 'Sopes', 'Consomé', 'Extras', 'Bebidas'];
+const categories = ['Órdenes', 'Tacos', 'Burritos', 'Sopes', 'Consomé', 'Extras', 'Bebidas', 'Especialidades'];
 
 // Elementos del DOM
 const tbody = document.getElementById('admin-table-tbody');

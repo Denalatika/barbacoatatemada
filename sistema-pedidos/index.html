@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Estilos -->
-    <link rel="stylesheet" href="pedidos.css?v=1.0.8">
+    <link rel="stylesheet" href="pedidos.css?v=1.0.9">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
@@ -187,11 +187,6 @@
                         <textarea id="address" name="address" class="form-control" placeholder="Calle, número, colonia, cruces y referencias de color de casa o portón."></textarea>
                     </div>
 
-                    <!-- Enlace de Ubicación (Condicional para A domicilio) -->
-                    <div class="form-group conditional-field" id="group-location">
-                        <label for="location_link" class="form-label">📍 Enlace de tu ubicación de Maps (para el envío)</label>
-                        <input type="text" id="location_link" name="location_link" class="form-control" placeholder="Pega aquí el enlace de tu ubicación de Google Maps o WhatsApp">
-                    </div>
 
                     <!-- Método de Pago (Efectivo / Transferencia) -->
                     <div class="form-group" id="group-payment">
@@ -293,6 +288,56 @@
         </div>
     </div>
 
+    <!-- Modal de Selección de Carne -->
+    <div class="meat-select-modal" id="meat-select-modal" role="dialog" aria-modal="true" aria-labelledby="meat-modal-title">
+        <div class="meat-select-modal-content">
+            <div class="meat-select-modal-header">
+                <h3 id="meat-modal-title" style="margin: 0; color: var(--dark-brown); font-family: var(--font-heading); font-size: 1.3rem;">Elige tu ingrediente</h3>
+                <button type="button" class="btn-close-meat-modal" id="btn-close-meat-modal" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <div class="meat-select-body">
+                <p class="meat-select-description">Selecciona la carne para tu <strong id="meat-select-product-name">platillo</strong>:</p>
+                <div class="meat-options-grid">
+                    <label class="meat-option-card">
+                        <input type="radio" name="meat-selection" value="Barbacoa" checked>
+                        <div class="meat-option-card-content">
+                            <span class="meat-icon">🥩</span>
+                            <div class="meat-info">
+                                <span class="meat-name">Barbacoa</span>
+                                <span class="meat-desc">Nuestra especialidad tatemada lenta</span>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="meat-option-card">
+                        <input type="radio" name="meat-selection" value="Cabeza">
+                        <div class="meat-option-card-content">
+                            <span class="meat-icon">🌮</span>
+                            <div class="meat-info">
+                                <span class="meat-name">Cabeza</span>
+                                <span class="meat-desc">Suave, jugosa y llena de sabor tradicional</span>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="meat-option-card">
+                        <input type="radio" name="meat-selection" value="Chicharrón en salsa roja">
+                        <div class="meat-option-card-content">
+                            <span class="meat-icon">🌶️</span>
+                            <div class="meat-info">
+                                <span class="meat-name">Chicharrón en salsa roja</span>
+                                <span class="meat-desc">Guisado artesanal con el toque picante justo</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="meat-select-footer">
+                <button type="button" class="btn-confirm-meat" id="btn-confirm-meat">
+                    Confirmar y agregar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
@@ -312,6 +357,6 @@
 
     <!-- Scripts -->
     <script src="menu-data.js"></script>
-    <script src="pedidos.js?v=1.0.8"></script>
+    <script src="pedidos.js?v=1.0.9"></script>
 </body>
 </html>
