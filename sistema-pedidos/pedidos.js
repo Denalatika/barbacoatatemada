@@ -275,7 +275,16 @@ function setupListeners() {
             e.target.value = formatted;
         });
     }
+
+    // Escuchar el evento pageshow para detectar cuando el usuario regresa (ej. al pulsar Atrás desde WhatsApp en móvil/tablet)
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            // El navegador restauró la página desde el caché. Forzamos recarga del carrito desde localStorage.
+            loadCartFromLocalStorage();
+        }
+    });
 }
+
 
 // 1. RENDERIZAR CATEGORÍAS
 function renderCategories() {
@@ -1087,13 +1096,16 @@ function loadCartFromLocalStorage() {
     if (savedCart) {
         try {
             cart = JSON.parse(savedCart);
-            renderCart();
         } catch (e) {
             console.error("Error al leer el carrito guardado:", e);
             cart = [];
         }
+    } else {
+        cart = [];
     }
+    renderCart(); // Siempre renderizar para alinear la UI con el estado real
 }
+
 
 // 13. LIMPIAR EL CARRITO
 function clearCart() {
