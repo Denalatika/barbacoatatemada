@@ -539,6 +539,70 @@
         .admin-logged-in #login-container {
             display: none !important;
         }
+
+        /* Drag-and-drop zone style in Admin Table */
+        .thumb-upload-zone {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+            border-radius: 8px;
+            border: 2px dashed rgba(184, 92, 44, 0.3);
+            background-color: #faf6f0;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .thumb-upload-zone:hover {
+            border-color: var(--burnt-orange, #b85c2c);
+            background-color: rgba(184, 92, 44, 0.08);
+            transform: scale(1.06);
+            box-shadow: 0 4px 10px rgba(184, 92, 44, 0.15);
+        }
+
+        .thumb-upload-zone.drag-active {
+            border-color: var(--green-success, #25d366);
+            background-color: rgba(37, 211, 102, 0.1);
+            box-shadow: 0 0 12px rgba(37, 211, 102, 0.3);
+            transform: scale(1.1);
+        }
+
+        .thumb-upload-zone .product-thumb {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            border: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .thumb-upload-zone .thumb-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(31, 18, 11, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .thumb-upload-zone:hover .thumb-overlay {
+            opacity: 1;
+        }
+
+        .thumb-upload-zone .thumb-overlay span {
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
@@ -750,7 +814,7 @@
                         <pre id="code-block">
 /*
  * Google Apps Script - Registro de Pedidos Barbacoa Tatemada
- * Versión 1.1 - Ultra-Robusta (Soporta scripts contenedores e independientes)
+ * Versión 1.2 - Ultra-Robusta (Pestañas "Pedidos" y "Clientes" autogestionadas)
  */
 
 // CONFIGURACIÓN DE SEGURIDAD (Opcional):
@@ -786,7 +850,9 @@ function doPost(e) {
     })).setMimeType(ContentService.MimeType.JSON);
   }
 
-  // Obtener o crear la pestaña "Pedidos"
+  // ==========================================
+  // 1. REGISTRO EN LA PESTAÑA "Pedidos"
+  // ==========================================
   var sheet = ss.getSheetByName("Pedidos");
   if (!sheet) {
     sheet = ss.insertSheet("Pedidos");
@@ -818,10 +884,11 @@ function doPost(e) {
     }
     
     var data = JSON.parse(e.postData.contents);
+    var nowText = new Date().toLocaleString("es-MX", {timeZone: "America/Hermosillo"});
     
     // Escribir fila con información detallada
     sheet.appendRow([
-      new Date().toLocaleString("es-MX", {timeZone: "America/Hermosillo"}),
+      nowText,
       data.customer_name || "N/A",
       "'" + (data.customer_phone || "N/A"), // Comilla para conservar ceros iniciales en Excel/Sheets
       data.customer_dob || "N/A",
@@ -835,12 +902,96 @@ function doPost(e) {
       data.notes || "N/A"
     ]);
     
-    // Auto-ajustar el ancho de las columnas
+    // Auto-ajustar el ancho de las columnas de Pedidos
     sheet.autoResizeColumns(1, 12);
+
+    // ==========================================
+    // 2. REGISTRO EN LA PESTAÑA "Clientes"
+    // ==========================================
+    var customerSheet = ss.getSheetByName("Clientes");
+    if (!customerSheet) {
+      customerSheet = ss.insertSheet("Clientes");
+    }
+
+    // Crear encabezados si la hoja está vacía
+    if (customerSheet.getLastRow() === 0) {
+      customerSheet.appendRow([
+        "Nombre", 
+        "Teléfono", 
+        "Domicilio", 
+        "Fecha Nacimiento", 
+        "Compras Realizadas", 
+        "Última Compra"
+      ]);
+      customerSheet.getRange("A1:F1").setFontWeight("bold").setBackground("#FFEBE0").setFontColor("#B85C2C");
+    }
+
+    var customerName = data.customer_name ? data.customer_name.trim() : "N/A";
+    var customerPhone = data.customer_phone ? data.customer_phone.trim() : "";
+    var customerAddress = (data.delivery_type === "A domicilio" && data.address) ? data.address.trim() : "N/A";
+    var customerDob = data.customer_dob ? data.customer_dob.trim() : "No proporcionada";
+
+    if (customerPhone !== "") {
+      var lastRow = customerSheet.getLastRow();
+      var foundIndex = -1;
+      
+      // Buscar cliente por su número de teléfono de forma limpia (ignorando caracteres no numéricos)
+      if (lastRow > 1) {
+        var phoneRange = customerSheet.getRange(2, 2, lastRow - 1, 1);
+        var phones = phoneRange.getValues();
+        var cleanInputPhone = customerPhone.replace(/[^0-9]/g, "");
+        
+        for (var i = 0; i < phones.length; i++) {
+          var cleanPhone = phones[i][0].toString().replace(/[^0-9]/g, "");
+          if (cleanPhone === cleanInputPhone && cleanInputPhone !== "") {
+            foundIndex = i + 2; // Arreglo empieza en 0 y la hoja en fila 2
+            break;
+          }
+        }
+      }
+
+      if (foundIndex !== -1) {
+        // Cliente existente: actualizar datos e incrementar contador
+        if (customerName !== "N/A") {
+          customerSheet.getRange(foundIndex, 1).setValue(customerName);
+        }
+        
+        // Actualizar domicilio solo si esta orden fue a domicilio
+        if (customerAddress !== "N/A" && customerAddress !== "") {
+          customerSheet.getRange(foundIndex, 3).setValue(customerAddress);
+        }
+        
+        // Actualizar fecha de nacimiento si no la teníamos registrada
+        var currentDob = customerSheet.getRange(foundIndex, 4).getValue();
+        if ((currentDob === "No proporcionada" || currentDob === "" || currentDob === "N/A") && customerDob !== "No proporcionada") {
+          customerSheet.getRange(foundIndex, 4).setValue(customerDob);
+        }
+        
+        // Incrementar el contador de compras
+        var currentPurchases = parseInt(customerSheet.getRange(foundIndex, 5).getValue()) || 0;
+        customerSheet.getRange(foundIndex, 5).setValue(currentPurchases + 1);
+        
+        // Registrar fecha y hora de la última compra
+        customerSheet.getRange(foundIndex, 6).setValue(nowText);
+      } else {
+        // Cliente nuevo: agregar fila con contador = 1
+        customerSheet.appendRow([
+          customerName,
+          "'" + customerPhone,
+          customerAddress,
+          customerDob,
+          1,
+          nowText
+        ]);
+      }
+      
+      // Auto-ajustar el ancho de las columnas de Clientes
+      customerSheet.autoResizeColumns(1, 6);
+    }
     
     return ContentService.createTextOutput(JSON.stringify({
       "status": "success",
-      "message": "Pedido registrado correctamente en Google Sheets."
+      "message": "Pedido y datos de cliente registrados correctamente en Google Sheets."
     })).setMimeType(ContentService.MimeType.JSON);
     
   } catch(error) {

@@ -272,14 +272,22 @@ function renderAdminTable() {
         
         const imageUrl = product.image || '../assets/images/logo.png';
         const priceVal = product.price !== null ? product.price : '';
+        const isBase64 = product.image && product.image.startsWith('data:image/');
+        const displayPath = isBase64 ? (product.image.substring(0, 50) + "... (Base64)") : (product.image || '');
         
         tr.innerHTML = `
             <td>
-                <img src="${imageUrl}" class="product-thumb" id="thumb-${index}" onerror="this.src='../assets/images/logo.png'">
+                <div class="thumb-upload-zone" id="upload-zone-${index}" onclick="document.getElementById('file-input-${index}').click()" ondragover="handleDragOver(event, ${index})" ondragleave="handleDragLeave(event, ${index})" ondrop="handleDrop(event, ${index})">
+                    <img src="${imageUrl}" class="product-thumb" id="thumb-${index}" onerror="this.src='../assets/images/logo.png'">
+                    <div class="thumb-overlay">
+                        <span>+</span>
+                    </div>
+                    <input type="file" id="file-input-${index}" accept="image/*" style="display: none;" onchange="handleFileSelect(${index}, this.files)">
+                </div>
             </td>
             <td>
                 <input type="text" class="admin-input" value="${product.name}" onchange="updateProductField(${index}, 'name', this.value)" placeholder="Nombre del plato" style="font-weight: 700;">
-                <input type="text" class="admin-input" value="${product.image || ''}" onchange="updateProductImage(${index}, this.value)" placeholder="Ruta de imagen (ej. ../assets/images/...)" style="font-size: 0.75rem; margin-top: 0.3rem; color: #555;">
+                <input type="text" class="admin-input" id="image-input-${index}" value="${displayPath}" onchange="updateProductImage(${index}, this.value)" placeholder="Ruta de imagen o arrastra archivo..." style="font-size: 0.75rem; margin-top: 0.3rem; color: #555;">
             </td>
             <td>
                 <select class="admin-input" onchange="updateProductField(${index}, 'category', this.value)">
@@ -315,6 +323,85 @@ function renderAdminTable() {
     });
 }
 
+// Lógica de Drag & Drop y Selección de Imagen Local
+window.handleDragOver = function(event, index) {
+    event.preventDefault();
+    const zone = document.getElementById(`upload-zone-${index}`);
+    if (zone) {
+        zone.classList.add('drag-active');
+    }
+};
+
+window.handleDragLeave = function(event, index) {
+    event.preventDefault();
+    const zone = document.getElementById(`upload-zone-${index}`);
+    if (zone) {
+        zone.classList.remove('drag-active');
+    }
+};
+
+window.handleDrop = function(event, index) {
+    event.preventDefault();
+    const zone = document.getElementById(`upload-zone-${index}`);
+    if (zone) {
+        zone.classList.remove('drag-active');
+    }
+    
+    if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+        handleFileSelect(index, event.dataTransfer.files);
+    }
+};
+
+window.handleFileSelect = function(index, files) {
+    if (!files || files.length === 0) return;
+    const file = files[0];
+    if (!file.type.startsWith('image/')) {
+        showToast("❌ Por favor, selecciona solo archivos de imagen.");
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            // Configurar canvas para redimensionar la imagen a un tamaño razonable (máx 350px de ancho/alto)
+            const canvas = document.createElement('canvas');
+            const maxDim = 350;
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > height) {
+                if (width > maxDim) {
+                    height = Math.round((height * maxDim) / width);
+                    width = maxDim;
+                }
+            } else {
+                if (height > maxDim) {
+                    width = Math.round((width * maxDim) / height);
+                    height = maxDim;
+                }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Exportar como JPEG de buena calidad (0.75) para reducir el tamaño al mínimo (normalmente < 15KB)
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+            
+            // Actualizar modelo y vista
+            updateProductImage(index, compressedBase64);
+            
+            // Mostrar retroalimentación
+            showToast("📸 ¡Imagen cargada y optimizada con éxito!");
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+};
+
 // Actualizar campos individuales
 window.updateProductField = function(index, field, value) {
     if (currentMenu[index]) {
@@ -335,6 +422,11 @@ window.updateProductImage = function(index, value) {
         const imgThumb = document.getElementById(`thumb-${index}`);
         if (imgThumb) {
             imgThumb.src = value.trim() || '../assets/images/logo.png';
+        }
+        const imgInput = document.getElementById(`image-input-${index}`);
+        if (imgInput) {
+            const isBase64 = value.startsWith('data:image/');
+            imgInput.value = isBase64 ? (value.substring(0, 50) + "... (Base64)") : value;
         }
     }
 };
