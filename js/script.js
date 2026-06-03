@@ -108,6 +108,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.style.setProperty('--yp', (y / window.innerHeight).toFixed(2));
     };
     document.body.addEventListener('pointermove', syncPointer);
+
+    // Story Image Slideshow
+    const storyImg1 = document.getElementById('story-img-1');
+    const storyImg2 = document.getElementById('story-img-2');
+    if (storyImg1 && storyImg2) {
+        setInterval(() => {
+            if (storyImg1.style.opacity === '1') {
+                storyImg1.style.opacity = '0';
+                storyImg2.style.opacity = '1';
+            } else {
+                storyImg1.style.opacity = '1';
+                storyImg2.style.opacity = '0';
+            }
+        }, 4000); // Cambia cada 4 segundos
+    }
 });
 
     // --- Interactive Mobile Menu Logic ---
