@@ -149,8 +149,8 @@ const MENU_DATA = [
     "description": "Caldo reconfortante de birria tatemada con garbanzos, tierna carne y el sazón tradicional de la casa.",
     "price": 130,
     "image": "../assets/images/birria_en_caldo.png",
-    "available": true,
-    "popular": true
+    "available": false,
+    "popular": false
   }
 ];
 
