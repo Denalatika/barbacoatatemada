@@ -100,4 +100,28 @@ document.addEventListener('DOMContentLoaded', () => {
             heroImg.src = imgUrl;
         }
     }
+
+    // 6. Llenar la galería
+    const galleryGrid = document.getElementById('gallery-grid');
+    if (galleryGrid) {
+        // Tomar las imágenes del menú (priorizar las populares)
+        let allImages = popularItems.filter(item => item.image);
+        const extraAllImages = currentMenu.filter(item => item.image && !item.popular);
+        allImages = allImages.concat(extraAllImages);
+        
+        let galleryHtml = '';
+        for (let i = 0; i < Math.min(8, allImages.length); i++) {
+            let imgUrl = allImages[i].image;
+            if (imgUrl.startsWith('../')) {
+                imgUrl = imgUrl.substring(3);
+            }
+            galleryHtml += `
+                <div class="gallery-item" onclick="openModal('${imgUrl}')">
+                    <img src="${imgUrl}" alt="${allImages[i].name}" loading="lazy">
+                    <div class="gallery-overlay"><span>Ver más grande</span></div>
+                </div>
+            `;
+        }
+        galleryGrid.innerHTML = galleryHtml;
+    }
 });
