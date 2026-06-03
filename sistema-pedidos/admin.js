@@ -472,12 +472,63 @@ window.addNewProductRow = function() {
     generateExportCode();
 };
 
-// Guardar cambios locales
-window.saveLocalMenuChanges = function() {
+// Guardar cambios y publicar en la Web (Github)
+window.publishMenuToWeb = async function(btnElement) {
+    // 1. Siempre guardar localmente por si acaso
     localStorage.setItem('valetatemada_custom_menu', JSON.stringify(currentMenu));
     updateStats();
     generateExportCode();
-    showToast("💾 ¡Cambios guardados localmente! Recuerda exportar tu archivo para hacerlo permanente.");
+
+    // 2. Comprobar si estamos en modo local (puerto 8000 o similar sin /api real)
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    if (isLocalhost) {
+        showToast("💾 Guardado local exitoso. (Nota: La subida automática a Github requiere estar alojado en Vercel o usar 'vercel dev')");
+        return;
+    }
+
+    // 3. Estamos en producción (Vercel), iniciar proceso de subida
+    const originalText = btnElement.innerHTML;
+    btnElement.innerHTML = "⏳ Publicando en la nube...";
+    btnElement.disabled = true;
+    btnElement.style.opacity = "0.7";
+
+    try {
+        const response = await fetch('/api/save-menu', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(currentMenu)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast("🚀 ¡Éxito! El menú se ha actualizado en la web. Los cambios serán visibles para todos en ~30 segundos.");
+            btnElement.style.backgroundColor = "var(--green-success)";
+            btnElement.innerHTML = "✅ Publicado Correctamente";
+        } else {
+            console.error("Error API:", data);
+            showToast("❌ Error al publicar: " + (data.error || "Desconocido"));
+            if (data.error && data.error.includes("GITHUB_TOKEN")) {
+                alert("Falta configurar el GITHUB_TOKEN en las variables de entorno de Vercel.");
+            }
+            btnElement.innerHTML = "❌ Error al publicar";
+        }
+    } catch (error) {
+        console.error("Error de conexión:", error);
+        showToast("❌ Error de red al intentar publicar.");
+        btnElement.innerHTML = "❌ Error de conexión";
+    }
+
+    // Restaurar botón después de 3 segundos
+    setTimeout(() => {
+        btnElement.innerHTML = originalText;
+        btnElement.disabled = false;
+        btnElement.style.opacity = "1";
+        btnElement.style.backgroundColor = "";
+    }, 3000);
 };
 
 // Restablecer datos originales

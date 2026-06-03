@@ -157,107 +157,8 @@
                 <p class="section-subtitle">Ven por ese antojo que no se quita.</p>
             </div>
 
-            <div class="grid menu-grid">
-                <!-- Card 1 -->
-                <div class="card" data-glow>
-                    <div class="card-img-wrapper">
-                        <img src="assets/images/orden_familiar.png" alt="Orden de Barbacoa El Vale" class="card-img"
-                            loading="lazy">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <h3 class="card-title">Orden de Barbacoa</h3>
-                            <span class="card-price">$160</span>
-                        </div>
-                        <p class="card-text">Nuestra especialidad tatemada. Acompañada de taquitos de frijol doraditos y
-                            tortillas con asientos para una experiencia completa.</p>
-                        <a href="/sistema-pedidos/?add=orden-barbacoa" class="btn btn-outline">Pedir ahora</a>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="card" data-glow>
-                    <div class="card-img-wrapper">
-                        <img src="assets/images/hero_barbacoa.png" alt="Taco Fundido" class="card-img" loading="lazy">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <h3 class="card-title">Taco Fundido</h3>
-                            <span class="card-price">$60</span>
-                        </div>
-                        <p class="card-text">Barbacoa jugosa, cabeza o chicharrón con el toque irresistible del queso
-                            gratinado. La combinación perfecta.</p>
-                        <a href="/sistema-pedidos/?add=taco-fundido" class="btn btn-outline">Pedir ahora</a>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="card" data-glow>
-                    <div class="card-img-wrapper">
-                        <img src="assets/images/sopes_barbacoa.png" alt="Charreado El Vale" class="card-img"
-                            loading="lazy">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <h3 class="card-title">Charreado</h3>
-                            <span class="card-price">$80</span>
-                        </div>
-                        <p class="card-text">Tu carne favorita envuelta en una crujiente y deliciosa costra de queso
-                            artesanal. Sabor que sorprende en cada bocado.</p>
-                        <a href="/sistema-pedidos/?add=taco-charreado" class="btn btn-outline">Pedir ahora</a>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="card" data-glow>
-                    <div class="card-img-wrapper">
-                        <img src="assets/images/tapatia_barbacoa.png" alt="Tapatía de Barbacoa" class="card-img"
-                            loading="lazy">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <h3 class="card-title">Tapatía</h3>
-                            <span class="card-price">$160</span>
-                        </div>
-                        <p class="card-text">Generosa quesadilla doradita rellena de barbacoa, frijol y queso gratinado.
-                            El antojo que no te puedes perder.</p>
-                        <a href="/sistema-pedidos/?add=tapatia" class="btn btn-outline">Pedir ahora</a>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="card" data-glow>
-                    <div class="card-img-wrapper">
-                        <img src="assets/images/chilaquiles_barbacoa.png" alt="Chilaquiles con Barbacoa" class="card-img"
-                            loading="lazy">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <h3 class="card-title">Chilaquiles</h3>
-                            <span class="card-price">$140</span>
-                        </div>
-                        <p class="card-text">Bañados en salsa artesanal, coronados con abundante barbacoa tatemada, crema
-                            y queso fresco.</p>
-                        <a href="/sistema-pedidos/?add=chilaquiles-barbacoa" class="btn btn-outline">Pedir ahora</a>
-                    </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="card" data-glow>
-                    <div class="card-img-wrapper">
-                        <img src="assets/images/birria_en_caldo.png" alt="Birria en Caldo Especial" class="card-img"
-                            loading="lazy">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <h3 class="card-title">Birria en Caldo</h3>
-                            <span class="card-price">$130</span>
-                        </div>
-                        <p class="card-text">Caldo reconfortante de birria tatemada con garbanzos, tierna carne y el
-                            sazón tradicional de la casa.</p>
-                        <a href="/sistema-pedidos/?add=birria-caldo" class="btn btn-outline">Pedir ahora</a>
-                    </div>
-                </div>
+            <div class="grid menu-grid" id="menu-grid">
+                <!-- Los platillos se inyectarán aquí dinámicamente desde js/home-menu.js -->
             </div>
 
             <!-- Sección de Promociones Editables -->
@@ -569,6 +470,8 @@
     </nav>
 
     <!-- Scripts -->
+    <script src="sistema-pedidos/menu-data.js"></script>
+    <script src="js/home-menu.js"></script>
     <script src="js/script.js"></script>
 </body>
 

@@ -13,3 +13,6 @@ footer_temp.html
 # IDE files
 .vscode/
 .idea/
+
+# Entorno
+.env
