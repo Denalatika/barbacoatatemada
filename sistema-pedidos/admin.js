@@ -313,9 +313,15 @@ function renderAdminTable() {
                 </label>
             </td>
             <td style="text-align: center;">
-                <button type="button" class="btn-remove" onclick="deleteProductRow(${index})" aria-label="Eliminar fila" style="margin: 0 auto; color: var(--red-error);">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                </button>
+                <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <button type="button" onclick="moveItemUp(${index})" ${index === 0 ? 'disabled' : ''} title="Mover arriba" style="padding: 2px 5px; background: none; border: none; cursor: ${index === 0 ? 'default' : 'pointer'}; opacity: ${index === 0 ? '0.3' : '1'}; font-size: 1.1rem;">⬆️</button>
+                        <button type="button" onclick="moveItemDown(${index})" ${index === currentMenu.length - 1 ? 'disabled' : ''} title="Mover abajo" style="padding: 2px 5px; background: none; border: none; cursor: ${index === currentMenu.length - 1 ? 'default' : 'pointer'}; opacity: ${index === currentMenu.length - 1 ? '0.3' : '1'}; font-size: 1.1rem;">⬇️</button>
+                    </div>
+                    <button type="button" class="btn-remove" onclick="deleteProductRow(${index})" aria-label="Eliminar fila" style="margin: 0; color: var(--red-error);">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    </button>
+                </div>
             </td>
         `;
         
@@ -432,6 +438,28 @@ window.updateProductImage = function(index, value) {
 };
 
 // Eliminar fila
+// Subir de nivel un platillo
+window.moveItemUp = function(index) {
+    if (index > 0) {
+        const temp = currentMenu[index - 1];
+        currentMenu[index - 1] = currentMenu[index];
+        currentMenu[index] = temp;
+        renderAdminTable();
+        updateStats();
+    }
+};
+
+// Bajar de nivel un platillo
+window.moveItemDown = function(index) {
+    if (index < currentMenu.length - 1) {
+        const temp = currentMenu[index + 1];
+        currentMenu[index + 1] = currentMenu[index];
+        currentMenu[index] = temp;
+        renderAdminTable();
+        updateStats();
+    }
+};
+
 window.deleteProductRow = function(index) {
     const confirmDelete = confirm(`¿Estás seguro de que quieres eliminar "${currentMenu[index].name}" del catálogo?`);
     if (confirmDelete) {
