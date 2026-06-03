@@ -82,4 +82,22 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.setProperty('--y', `${y}px`);
         });
     });
+
+    // 5. Actualizar imágenes del Hero
+    let heroImages = popularItems.filter(item => item.image).map(item => item.image);
+    if (heroImages.length < 4) {
+        const extraImages = currentMenu.filter(item => item.image && !item.popular).map(item => item.image);
+        heroImages = heroImages.concat(extraImages);
+    }
+    
+    for (let i = 0; i < 4; i++) {
+        const heroImg = document.getElementById(`hero-img-${i+1}`);
+        if (heroImg && heroImages[i]) {
+            let imgUrl = heroImages[i];
+            if (imgUrl.startsWith('../')) {
+                imgUrl = imgUrl.substring(3);
+            }
+            heroImg.src = imgUrl;
+        }
+    }
 });
