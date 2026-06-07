@@ -15,28 +15,28 @@ const sheetsStatusCard = document.getElementById('sheets-status-card');
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Cargar datos del catálogo (preferir local storage si hay cambios guardados)
     loadMenuData();
-    
+
     // 2. Cargar configuración de Google Sheets
     loadSheetsConfig();
-    
+
     // 3. Cargar configuración de datos bancarios
     loadBankDetails();
-    
+
     // 4. Renderizar la tabla de edición
     renderAdminTable();
-    
+
     // 5. Actualizar estadísticas de negocio y código a exportar
     updateStats();
     generateExportCode();
 });
 
 // Cambiar de pestañas (Tabs)
-window.switchTab = function(tabId, buttonEl) {
+window.switchTab = function (tabId, buttonEl) {
     // Quitar active de botones
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     // Quitar active de contenidos
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-    
+
     // Activar pestaña elegida
     buttonEl.classList.add('active');
     document.getElementById(tabId).classList.add('active');
@@ -81,9 +81,9 @@ function loadSheetsConfig() {
 }
 
 // Guardar URL de Sheets
-window.saveSheetsUrl = function() {
+window.saveSheetsUrl = function () {
     if (!sheetsUrlInput) return;
-    
+
     const url = sheetsUrlInput.value.trim();
     if (url === '') {
         localStorage.removeItem('valetatemada_sheets_url');
@@ -99,29 +99,29 @@ window.saveSheetsUrl = function() {
 };
 
 // Probar conexión con Google Sheets
-window.testSheetsConnection = function() {
+window.testSheetsConnection = function () {
     if (!sheetsUrlInput) return;
-    
+
     const url = sheetsUrlInput.value.trim();
     if (url === '') {
         alert("Por favor ingresa primero la URL de tu Google Apps Script en el campo de arriba.");
         return;
     }
-    
+
     if (!url.startsWith('https://script.google.com/')) {
         alert("La URL no es válida. Debe comenzar con https://script.google.com/");
         return;
     }
-    
+
     const btnTest = document.getElementById('btn-test-sheets');
     const diagBox = document.getElementById('sheets-diagnostic-box');
-    
+
     if (btnTest) {
         btnTest.disabled = true;
         btnTest.innerText = "⏳ Probando conexión...";
         btnTest.style.opacity = "0.7";
     }
-    
+
     if (diagBox) {
         diagBox.style.display = "block";
         diagBox.style.backgroundColor = "#FFF3CD";
@@ -132,7 +132,7 @@ window.testSheetsConnection = function() {
             Enviando un pedido de prueba en tiempo real a tu Google Sheets Web App. Esto toma unos segundos...
         `;
     }
-    
+
     const testPayload = {
         customer_name: "SOPORTE TÉCNICO (Fila de Prueba)",
         customer_phone: "0000000000",
@@ -146,11 +146,11 @@ window.testSheetsConnection = function() {
         order_items: "- 1 u. x PRUEBA DE CONEXIÓN EXITOSA ($999.00)\n",
         notes: "Esta es una fila de prueba generada automáticamente para validar la sincronización correcta con Google Sheets."
     };
-    
+
     // Configurar un timeout de 12 segundos
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 12000);
-    
+
     fetch(url, {
         method: 'POST',
         mode: 'cors',
@@ -161,41 +161,41 @@ window.testSheetsConnection = function() {
         body: JSON.stringify(testPayload),
         signal: controller.signal
     })
-    .then(response => {
-        clearTimeout(timeoutId);
-        return response.json();
-    })
-    .then(data => {
-        if (btnTest) {
-            btnTest.disabled = false;
-            btnTest.innerText = "⚡️ Probar Conexión (Enviar Fila de Prueba)";
-            btnTest.style.opacity = "1";
-        }
-        
-        if (data && data.status === "success") {
-            // Guardar automáticamente la URL exitosa en localStorage
-            localStorage.setItem('valetatemada_sheets_url', url);
-            if (sheetsStatusCard) sheetsStatusCard.style.display = 'flex';
-            
-            if (diagBox) {
-                diagBox.style.backgroundColor = "#D1E7DD";
-                diagBox.style.borderColor = "#BADBCC";
-                diagBox.style.color = "#0F5132";
-                diagBox.innerHTML = `
+        .then(response => {
+            clearTimeout(timeoutId);
+            return response.json();
+        })
+        .then(data => {
+            if (btnTest) {
+                btnTest.disabled = false;
+                btnTest.innerText = "⚡️ Probar Conexión (Enviar Fila de Prueba)";
+                btnTest.style.opacity = "1";
+            }
+
+            if (data && data.status === "success") {
+                // Guardar automáticamente la URL exitosa en localStorage
+                localStorage.setItem('valetatemada_sheets_url', url);
+                if (sheetsStatusCard) sheetsStatusCard.style.display = 'flex';
+
+                if (diagBox) {
+                    diagBox.style.backgroundColor = "#D1E7DD";
+                    diagBox.style.borderColor = "#BADBCC";
+                    diagBox.style.color = "#0F5132";
+                    diagBox.innerHTML = `
                     <strong>🟢 ¡Conexión exitosa con tu Google Sheets!</strong><br>
                     El script de Google respondió con éxito. Se ha insertado correctamente la fila de prueba: <strong>'SOPORTE TÉCNICO (Fila de Prueba)'</strong>.<br><br>
                     <strong>¡Felicidades!</strong> Tu base de datos está enlazada al 100% y capturará de forma automática y gratuita todos los pedidos que tus clientes hagan desde sus celulares, iPads y computadoras.
                 `;
-            }
-            showToast("¡Conexión probada y guardada con éxito!");
-        } else {
-            // Caso en el que el script responde pero tiene un error interno
-            const errMsg = data ? data.message : "Error desconocido en el script";
-            if (diagBox) {
-                diagBox.style.backgroundColor = "#F8D7DA";
-                diagBox.style.borderColor = "#F5C2C7";
-                diagBox.style.color = "#842029";
-                diagBox.innerHTML = `
+                }
+                showToast("¡Conexión probada y guardada con éxito!");
+            } else {
+                // Caso en el que el script responde pero tiene un error interno
+                const errMsg = data ? data.message : "Error desconocido en el script";
+                if (diagBox) {
+                    diagBox.style.backgroundColor = "#F8D7DA";
+                    diagBox.style.borderColor = "#F5C2C7";
+                    diagBox.style.color = "#842029";
+                    diagBox.innerHTML = `
                     <strong>🔴 Error Interno en tu Apps Script:</strong><br>
                     Tu servidor de Google Apps Script se comunicó pero falló al procesar el archivo. El error devuelto es:<br>
                     <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.4rem; border-radius: 4px; display: inline-block; margin-top: 0.3rem;">${errMsg}</code><br><br>
@@ -205,29 +205,29 @@ window.testSheetsConnection = function() {
                         <li>Si creaste el script directamente en Google Drive de forma independiente (no desde Extensiones > Apps Script de tu hoja), asegúrate de haber pegado el ID de tu hoja de cálculo en la variable <code>SPREADSHEET_ID</code> en la línea 9 de tu script.</li>
                     </ol>
                 `;
+                }
             }
-        }
-    })
-    .catch(error => {
-        clearTimeout(timeoutId);
-        if (btnTest) {
-            btnTest.disabled = false;
-            btnTest.innerText = "⚡️ Probar Conexión (Enviar Fila de Prueba)";
-            btnTest.style.opacity = "1";
-        }
-        
-        console.error("Error en la conexión de Sheets:", error);
-        
-        let diagnosticMsg = "";
-        
-        if (error.name === 'AbortError') {
-            diagnosticMsg = `
+        })
+        .catch(error => {
+            clearTimeout(timeoutId);
+            if (btnTest) {
+                btnTest.disabled = false;
+                btnTest.innerText = "⚡️ Probar Conexión (Enviar Fila de Prueba)";
+                btnTest.style.opacity = "1";
+            }
+
+            console.error("Error en la conexión de Sheets:", error);
+
+            let diagnosticMsg = "";
+
+            if (error.name === 'AbortError') {
+                diagnosticMsg = `
                 <strong>🔴 Tiempo de Espera Agotado (Timeout):</strong><br>
                 La petición tardó más de 12 segundos en responder. Esto suele ocurrir si los servidores de Google están congestionados o si el Apps Script está colgado procesando otra petición.<br><br>
                 <strong>Recomendación:</strong> Vuelve a intentar en unos momentos. Si el error persiste, comprueba que tu hoja de cálculo de Google Drive abre normalmente.
             `;
-        } else {
-            diagnosticMsg = `
+            } else {
+                diagnosticMsg = `
                 <strong>🔴 Error de Red o Bloqueo de CORS Detectado:</strong><br>
                 El navegador bloqueó la conexión a tu Apps Script. Esto ocurre principalmente por un tema de permisos y seguridad de Google.<br><br>
                 <strong>Cómo solucionarlo en 4 sencillos pasos:</strong>
@@ -244,37 +244,37 @@ window.testSheetsConnection = function() {
                     <li>Haz click en <strong>Implementar</strong>, otorga todos los permisos de seguridad de Google si te los solicita, y <strong>copia la nueva URL generada</strong>. Pégala en el campo gris arriba de esta página y vuelve a probar.</li>
                 </ol>
             `;
-        }
-        
-        if (diagBox) {
-            diagBox.style.backgroundColor = "#F8D7DA";
-            diagBox.style.borderColor = "#F5C2C7";
-            diagBox.style.color = "#842029";
-            diagBox.innerHTML = diagnosticMsg;
-        }
-    });
+            }
+
+            if (diagBox) {
+                diagBox.style.backgroundColor = "#F8D7DA";
+                diagBox.style.borderColor = "#F5C2C7";
+                diagBox.style.color = "#842029";
+                diagBox.innerHTML = diagnosticMsg;
+            }
+        });
 };
 
 // Renderizar tabla
 function renderAdminTable() {
     if (!tbody) return;
     tbody.innerHTML = '';
-    
+
     currentMenu.forEach((product, index) => {
         const tr = document.createElement('tr');
         tr.id = `row-${index}`;
-        
+
         // Selector de Categoría
         let catOptions = '';
         categories.forEach(cat => {
             catOptions += `<option value="${cat}" ${product.category === cat ? 'selected' : ''}>${cat}</option>`;
         });
-        
+
         const imageUrl = product.image || '../assets/images/logo.png';
         const priceVal = product.price !== null ? product.price : '';
         const isBase64 = product.image && product.image.startsWith('data:image/');
         const displayPath = isBase64 ? (product.image.substring(0, 50) + "... (Base64)") : (product.image || '');
-        
+
         tr.innerHTML = `
             <td>
                 <div class="thumb-upload-zone" id="upload-zone-${index}" onclick="document.getElementById('file-input-${index}').click()" ondragover="handleDragOver(event, ${index})" ondragleave="handleDragLeave(event, ${index})" ondrop="handleDrop(event, ${index})">
@@ -324,13 +324,13 @@ function renderAdminTable() {
                 </div>
             </td>
         `;
-        
+
         tbody.appendChild(tr);
     });
 }
 
 // Lógica de Drag & Drop y Selección de Imagen Local
-window.handleDragOver = function(event, index) {
+window.handleDragOver = function (event, index) {
     event.preventDefault();
     const zone = document.getElementById(`upload-zone-${index}`);
     if (zone) {
@@ -338,7 +338,7 @@ window.handleDragOver = function(event, index) {
     }
 };
 
-window.handleDragLeave = function(event, index) {
+window.handleDragLeave = function (event, index) {
     event.preventDefault();
     const zone = document.getElementById(`upload-zone-${index}`);
     if (zone) {
@@ -346,36 +346,36 @@ window.handleDragLeave = function(event, index) {
     }
 };
 
-window.handleDrop = function(event, index) {
+window.handleDrop = function (event, index) {
     event.preventDefault();
     const zone = document.getElementById(`upload-zone-${index}`);
     if (zone) {
         zone.classList.remove('drag-active');
     }
-    
+
     if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
         handleFileSelect(index, event.dataTransfer.files);
     }
 };
 
-window.handleFileSelect = function(index, files) {
+window.handleFileSelect = function (index, files) {
     if (!files || files.length === 0) return;
     const file = files[0];
     if (!file.type.startsWith('image/')) {
         showToast("❌ Por favor, selecciona solo archivos de imagen.");
         return;
     }
-    
+
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         const img = new Image();
-        img.onload = function() {
+        img.onload = function () {
             // Configurar canvas para redimensionar la imagen a un tamaño razonable (máx 350px de ancho/alto)
             const canvas = document.createElement('canvas');
             const maxDim = 350;
             let width = img.width;
             let height = img.height;
-            
+
             if (width > height) {
                 if (width > maxDim) {
                     height = Math.round((height * maxDim) / width);
@@ -387,19 +387,19 @@ window.handleFileSelect = function(index, files) {
                     height = maxDim;
                 }
             }
-            
+
             canvas.width = width;
             canvas.height = height;
-            
+
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
-            
+
             // Exportar como JPEG de buena calidad (0.75) para reducir el tamaño al mínimo (normalmente < 15KB)
             const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
-            
+
             // Actualizar modelo y vista
             updateProductImage(index, compressedBase64);
-            
+
             // Mostrar retroalimentación
             showToast("📸 ¡Imagen cargada y optimizada con éxito!");
         };
@@ -409,20 +409,20 @@ window.handleFileSelect = function(index, files) {
 };
 
 // Actualizar campos individuales
-window.updateProductField = function(index, field, value) {
+window.updateProductField = function (index, field, value) {
     if (currentMenu[index]) {
         currentMenu[index][field] = value;
     }
 };
 
-window.updateProductPrice = function(index, value) {
+window.updateProductPrice = function (index, value) {
     if (currentMenu[index]) {
         const val = value.trim();
         currentMenu[index].price = val === '' ? null : parseFloat(val);
     }
 };
 
-window.updateProductImage = function(index, value) {
+window.updateProductImage = function (index, value) {
     if (currentMenu[index]) {
         currentMenu[index].image = value.trim();
         const imgThumb = document.getElementById(`thumb-${index}`);
@@ -439,7 +439,7 @@ window.updateProductImage = function(index, value) {
 
 // Eliminar fila
 // Subir de nivel un platillo
-window.moveItemUp = function(index) {
+window.moveItemUp = function (index) {
     if (index > 0) {
         const temp = currentMenu[index - 1];
         currentMenu[index - 1] = currentMenu[index];
@@ -450,7 +450,7 @@ window.moveItemUp = function(index) {
 };
 
 // Bajar de nivel un platillo
-window.moveItemDown = function(index) {
+window.moveItemDown = function (index) {
     if (index < currentMenu.length - 1) {
         const temp = currentMenu[index + 1];
         currentMenu[index + 1] = currentMenu[index];
@@ -460,7 +460,7 @@ window.moveItemDown = function(index) {
     }
 };
 
-window.deleteProductRow = function(index) {
+window.deleteProductRow = function (index) {
     const confirmDelete = confirm(`¿Estás seguro de que quieres eliminar "${currentMenu[index].name}" del catálogo?`);
     if (confirmDelete) {
         currentMenu.splice(index, 1);
@@ -471,7 +471,7 @@ window.deleteProductRow = function(index) {
 };
 
 // Agregar nueva fila de producto
-window.addNewProductRow = function() {
+window.addNewProductRow = function () {
     const newId = 'producto-' + Date.now();
     currentMenu.push({
         id: newId,
@@ -483,9 +483,9 @@ window.addNewProductRow = function() {
         available: true,
         popular: false
     });
-    
+
     renderAdminTable();
-    
+
     // Hacer scroll hasta el fondo de la tabla para ver el nuevo registro
     setTimeout(() => {
         const lastRow = document.getElementById(`row-${currentMenu.length - 1}`);
@@ -495,13 +495,13 @@ window.addNewProductRow = function() {
             setTimeout(() => { lastRow.style.backgroundColor = ''; }, 2000);
         }
     }, 100);
-    
+
     updateStats();
     generateExportCode();
 };
 
 // Guardar cambios y publicar en la Web (Github)
-window.publishMenuToWeb = async function(btnElement) {
+window.publishMenuToWeb = async function (btnElement) {
     // 1. Siempre guardar localmente por si acaso
     localStorage.setItem('valetatemada_custom_menu', JSON.stringify(currentMenu));
     updateStats();
@@ -509,7 +509,7 @@ window.publishMenuToWeb = async function(btnElement) {
 
     // 2. Comprobar si estamos en modo local (puerto 8000 o similar sin /api real)
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    
+
     if (isLocalhost) {
         showToast("💾 Guardado local exitoso. (Nota: La subida automática a Github requiere estar alojado en Vercel o usar 'vercel dev')");
         return;
@@ -560,7 +560,7 @@ window.publishMenuToWeb = async function(btnElement) {
 };
 
 // Restablecer datos originales
-window.resetLocalMenuData = function() {
+window.resetLocalMenuData = function () {
     const confirmReset = confirm("¿Quieres eliminar todos los cambios guardados localmente y restablecer el menú del sitio al catálogo original?");
     if (confirmReset) {
         localStorage.removeItem('valetatemada_custom_menu');
@@ -575,7 +575,7 @@ window.resetLocalMenuData = function() {
 // Actualizar Estadísticas
 function updateStats() {
     if (!statTotal || !statActive || !statPopular) return;
-    
+
     statTotal.textContent = currentMenu.length;
     statActive.textContent = currentMenu.filter(p => p.available).length;
     statPopular.textContent = currentMenu.filter(p => p.popular).length;
@@ -584,7 +584,7 @@ function updateStats() {
 // Generar Código JS para menu-data.js
 function generateExportCode() {
     if (!menuCodeBlock) return;
-    
+
     const formattedJson = JSON.stringify(currentMenu, null, 2);
     const fullJsCode = `// Datos del menú oficial para el Sistema de Pedidos - Barbacoa Tatemada El Vale
 // Generado automáticamente desde el Panel Administrativo
@@ -599,14 +599,14 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // Descargar archivo menu-data.js
-window.downloadMenuDataFile = function() {
+window.downloadMenuDataFile = function () {
     // Generar código actualizado justo antes de descargar
     generateExportCode();
-    
+
     const code = menuCodeBlock.textContent;
     const blob = new Blob([code], { type: 'text/javascript;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    
+
     const a = document.createElement('a');
     a.href = url;
     a.download = 'menu-data.js';
@@ -614,21 +614,21 @@ window.downloadMenuDataFile = function() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     showToast("📥 Descargando archivo menu-data.js...");
 };
 
 // Copiar código de menu-data.js al portapapeles
-window.copyMenuDataCode = function(buttonEl) {
+window.copyMenuDataCode = function (buttonEl) {
     generateExportCode();
     const code = menuCodeBlock.textContent;
-    
+
     navigator.clipboard.writeText(code).then(() => {
         const originalText = buttonEl.textContent;
         buttonEl.textContent = "¡Copiado con éxito!";
         buttonEl.style.backgroundColor = "var(--green-success)";
         buttonEl.style.color = "var(--white)";
-        
+
         setTimeout(() => {
             buttonEl.textContent = originalText;
             buttonEl.style.backgroundColor = "";
@@ -640,14 +640,14 @@ window.copyMenuDataCode = function(buttonEl) {
 };
 
 // Copiar código de Apps Script al portapapeles
-window.copyAppsScriptCode = function(buttonEl) {
+window.copyAppsScriptCode = function (buttonEl) {
     const code = document.getElementById('code-block').innerText;
-    
+
     navigator.clipboard.writeText(code).then(() => {
         const originalText = buttonEl.textContent;
         buttonEl.textContent = "¡Código Copiado!";
         buttonEl.style.backgroundColor = "var(--green-success)";
-        
+
         setTimeout(() => {
             buttonEl.textContent = originalText;
             buttonEl.style.backgroundColor = "";
@@ -661,14 +661,14 @@ window.copyAppsScriptCode = function(buttonEl) {
 function showToast(message) {
     const toast = document.getElementById('alert-toast');
     if (!toast) return;
-    
+
     const toastText = document.getElementById('alert-toast-text');
     if (toastText) {
         toastText.textContent = message;
     }
-    
+
     toast.style.display = 'flex';
-    
+
     setTimeout(() => {
         toast.style.display = 'none';
     }, 3500);
@@ -693,7 +693,7 @@ function loadBankDetails() {
 }
 
 // Guardar configuración de datos bancarios
-window.saveBankDetails = function() {
+window.saveBankDetails = function () {
     const bankNameInput = document.getElementById('bank_name');
     const bankClabeInput = document.getElementById('bank_clabe');
     const bankHolderInput = document.getElementById('bank_holder');
@@ -721,26 +721,26 @@ window.saveBankDetails = function() {
 // FUNCIONES DE CONTROL DE ACCESO (LOGIN / LOGOUT)
 // ==========================================
 
-window.handleLogin = function(event) {
+window.handleLogin = function (event) {
     event.preventDefault();
     const userEl = document.getElementById('username');
     const passEl = document.getElementById('password');
     const errorEl = document.getElementById('login-error');
-    
+
     if (!userEl || !passEl) return;
-    
+
     const username = userEl.value.trim();
     const password = passEl.value;
-    
+
     // Credenciales requeridas: barbacoa / tatemada
     if (username === 'barbacoa' && password === 'tatemada') {
         if (errorEl) errorEl.style.display = 'none';
         localStorage.setItem('valetatemada_admin_logged_in', 'true');
         document.body.classList.add('admin-logged-in');
-        
+
         // Mostrar saludo premium con toast
         showToast("🔓 ¡Acceso concedido! Bienvenido al panel.");
-        
+
         // Limpiar formulario
         userEl.value = '';
         passEl.value = '';
@@ -756,11 +756,11 @@ window.handleLogin = function(event) {
     }
 };
 
-window.togglePasswordVisibility = function() {
+window.togglePasswordVisibility = function () {
     const passEl = document.getElementById('password');
     const toggleBtn = document.getElementById('toggle-password');
     if (!passEl) return;
-    
+
     if (passEl.type === 'password') {
         passEl.type = 'text';
         if (toggleBtn) {
@@ -784,7 +784,7 @@ window.togglePasswordVisibility = function() {
     }
 };
 
-window.handleLogout = function() {
+window.handleLogout = function () {
     const confirmLogout = confirm("¿Estás seguro de que quieres cerrar la sesión de administración?");
     if (confirmLogout) {
         localStorage.removeItem('valetatemada_admin_logged_in');
