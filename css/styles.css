@@ -773,8 +773,8 @@ ul {
 
 .footer-main {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 3rem;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 1.2fr;
+    gap: 2rem;
     align-items: start;
 }
 
@@ -883,13 +883,13 @@ ul {
     align-items: center;
     justify-content: center;
     color: var(--primary);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .social-icon:hover {
     transform: translateY(-3px) scale(1.1);
-    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
 .tape {
@@ -1005,13 +1005,15 @@ ul {
         padding: 2rem;
     }
 }
+
 /* --- Modern Mobile Interactive Menu --- */
 .interactive-menu {
     position: fixed;
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    display: none; /* Only mobile */
+    display: none;
+    /* Only mobile */
     background: var(--component-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
@@ -1104,10 +1106,23 @@ ul {
 }
 
 @keyframes iconBounce {
-    0%, 100% { transform: translateY(-4px) scale(1); }
-    30% { transform: translateY(-8px) scale(1.1); }
-    50% { transform: translateY(-4px) scale(0.95); }
-    80% { transform: translateY(-5px) scale(1.02); }
+
+    0%,
+    100% {
+        transform: translateY(-4px) scale(1);
+    }
+
+    30% {
+        transform: translateY(-8px) scale(1.1);
+    }
+
+    50% {
+        transform: translateY(-4px) scale(0.95);
+    }
+
+    80% {
+        transform: translateY(-5px) scale(1.02);
+    }
 }
 
 /* Responsive visibility */
@@ -1115,7 +1130,7 @@ ul {
     .interactive-menu {
         display: flex;
     }
-    
+
     /* Hide top nav items that are now in the dock */
     .header .nav-menu,
     .header .mobile-menu-btn {
@@ -1123,7 +1138,8 @@ ul {
     }
 
     body {
-        padding-bottom: 90px; /* Space for the dock */
+        padding-bottom: 90px;
+        /* Space for the dock */
     }
 
     /* General Centering */
@@ -1168,7 +1184,8 @@ ul {
     }
 
     .tape {
-        display: none; /* Hide tapes on mobile to avoid overlap */
+        display: none;
+        /* Hide tapes on mobile to avoid overlap */
     }
 
     .footer-bottom {
@@ -1189,12 +1206,13 @@ ul {
 
     /* Floating WhatsApp adjustment */
     .floating-wa {
-        bottom: 100px; /* Move up to not overlap dock */
+        bottom: 100px;
+        /* Move up to not overlap dock */
         right: 20px;
         width: 50px;
         height: 50px;
     }
-    
+
     .floating-wa svg {
         width: 28px;
         height: 28px;

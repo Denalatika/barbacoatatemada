@@ -20,8 +20,8 @@ export default async function handler(req, res) {
     // 1. Validar el token de Github
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
     if (!GITHUB_TOKEN) {
-      return res.status(500).json({ 
-        error: 'Falta configurar GITHUB_TOKEN en Vercel Environment Variables.' 
+      return res.status(500).json({
+        error: 'Falta configurar GITHUB_TOKEN en Vercel Environment Variables.'
       });
     }
 
@@ -62,8 +62,8 @@ if (typeof module !== 'undefined' && module.exports) {
 
     if (!getResponse.ok) {
       const errData = await getResponse.json();
-      return res.status(getResponse.status).json({ 
-        error: 'Error obteniendo archivo de Github', details: errData 
+      return res.status(getResponse.status).json({
+        error: 'Error obteniendo archivo de Github', details: errData
       });
     }
 
@@ -87,14 +87,14 @@ if (typeof module !== 'undefined' && module.exports) {
 
     if (!putResponse.ok) {
       const errData = await putResponse.json();
-      return res.status(putResponse.status).json({ 
-        error: 'Error guardando archivo en Github', details: errData 
+      return res.status(putResponse.status).json({
+        error: 'Error guardando archivo en Github', details: errData
       });
     }
 
     const result = await putResponse.json();
-    return res.status(200).json({ 
-      success: true, 
+    return res.status(200).json({
+      success: true,
       message: '¡Archivo actualizado en Github exitosamente! Vercel desplegará los cambios en ~30s.',
       commit: result.commit.html_url
     });

@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barbacoa Tatemada El Vale | Barbacoa tradicional en Nogales, Sonora</title>
     <meta name="description"
-        content="Disfruta barbacoa tatemada tradicional en Nogales, Sonora. Tacos, sopes, consomé, pedidos por WhatsApp, servicio a domicilio, Rappi y Uber Eats.">
+        content="Disfruta de la mejor barbacoa tatemada en Nogales, Sonora. Tacos, sopes, consomé calientito y un ambiente familiar. Pedidos por WhatsApp, servicio a domicilio y para recoger.">
     <meta name="keywords"
-        content="barbacoa en Nogales, Barbacoa Tatemada El Vale, tacos de barbacoa Nogales, sopes de barbacoa, consomé, comida mexicana Nogales, restaurante familiar Nogales">
+        content="barbacoa en Nogales, Barbacoa Tatemada El Vale, tacos de barbacoa Nogales, sopes de barbacoa, consomé de barbacoa en Nogales, comida mexicana familiar en Nogales, restaurante de barbacoa en Nogales">
 
     <!-- Open Graph for Social Media -->
     <meta property="og:title" content="Barbacoa Tatemada El Vale | Sabor Tradicional">
@@ -25,7 +25,7 @@
         rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=3">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/images/logo.png">
@@ -41,15 +41,21 @@
       "image": "assets/images/hero_barbacoa.png",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "A unos metros de la Glorieta de las Torres, justo enfrente del Gym",
-        "addressLocality": "Nogales",
+        "streetAddress": "Club Antena 103, Las Praderas",
+        "addressLocality": "Heroica Nogales",
         "addressRegion": "Sonora",
+        "postalCode": "84066",
         "addressCountry": "MX"
       },
       "telephone": "+526311052305",
-      "servesCuisine": "Mexican, Barbacoa",
-      "openingHours": "Th,Fr,Sa,Su,Mo,Tu 07:00-23:00",
-      "url": "https://www.facebook.com/BTEVNogales"
+      "servesCuisine": "Mexican",
+      "priceRange": "$$",
+      "url": "http://localhost:5173",
+      "hasMenu": "http://localhost:5173/#platillos",
+      "openingHours": "Mo 07:00-23:00, Tu 07:00-15:00, Th,Fr,Sa,Su 07:00-23:00",
+      "sameAs": [
+        "https://www.facebook.com/BTEVNogales"
+      ]
     }
     </script>
 </head>
@@ -161,6 +167,9 @@
                 <!-- Los platillos se inyectarán aquí dinámicamente desde js/home-menu.js -->
             </div>
 
+            <p class="text-center mt-medium" style="font-size: 0.9rem; color: #666; font-style: italic;">Precios sujetos
+                a cambio sin previo aviso. Confirma disponibilidad al ordenar.</p>
+
             <!-- Sección de Promociones Editables -->
             <div class="promo-banner mt-large" id="promo-section">
                 <div class="promo-content">
@@ -169,37 +178,72 @@
                         familiares!</p>
                 </div>
             </div>
+            <div class="text-center mt-large">
+                <a href="/sistema-pedidos/" class="btn btn-primary btn-large">Hacer pedido ahora</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Así se vive el sabor -->
+    <section id="experiencia" class="section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Así se vive el sabor de El Vale</h2>
+                <p class="section-subtitle">En Barbacoa Tatemada El Vale cuidamos cada parte del proceso: desde la
+                    cocción lenta de la carne hasta el consomé calientito que acompaña cada orden. Nuestro objetivo es
+                    servir comida mexicana con sabor familiar, preparada para disfrutarse caliente y en buena compañía.
+                </p>
+            </div>
+            <div class="grid features-grid mt-large"
+                style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                <div class="feature-card text-center"
+                    style="padding: 2rem; background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🔥</div>
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Preparación tradicional</h3>
+                    <p>Cocción lenta y tatemada, respetando las recetas de antaño.</p>
+                </div>
+                <div class="feature-card text-center"
+                    style="padding: 2rem; background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🍲</div>
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Consomé calientito</h3>
+                    <p>El acompañante perfecto, preparado al momento para ti.</p>
+                </div>
+                <div class="feature-card text-center"
+                    style="padding: 2rem; background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌮</div>
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Servido al momento</h3>
+                    <p>Comida fresca y caliente, garantizando la mejor experiencia local.</p>
+                </div>
+                <div class="feature-card text-center"
+                    style="padding: 2rem; background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">👨‍👩‍👧‍👦</div>
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Ambiente familiar</h3>
+                    <p>Un espacio cálido en Nogales para disfrutar con los tuyos.</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Historia breve -->
-    <section id="historia" class="section">
+    <section id="historia" class="section bg-cream">
         <div class="container story-container">
             <div class="story-content">
                 <h2 class="section-title">Tradición que se sirve caliente</h2>
-                <p class="text-large">En Barbacoa Tatemada El Vale preparamos cada platillo con ese sabor mexicano que
-                    se disfruta en familia. Una experiencia sencilla, sabrosa y auténtica para quienes buscan una buena
-                    barbacoa en Nogales.</p>
-                <div class="features-list mt-medium">
-                    <div class="feature">
-                        <span class="feature-icon">🔥</span>
-                        <div>
-                            <strong>Cocción a fuego lento</strong>
-                            <p>Respetando los procesos tradicionales para una carne suave y jugosa.</p>
-                        </div>
-                    </div>
-                    <div class="feature">
-                        <span class="feature-icon">👨‍👩‍👧‍👦</span>
-                        <div>
-                            <strong>Ambiente familiar</strong>
-                            <p>Un lugar donde todos se sienten como en casa.</p>
-                        </div>
-                    </div>
+                <p class="text-large">Barbacoa Tatemada El Vale nace con la intención de compartir un sabor mexicano
+                    auténtico, inspirado en la tradición de Tequila, Jalisco y servido con orgullo en Nogales, Sonora.
+                    Cada platillo busca conservar ese sabor familiar que se disfruta caliente, con calma y en buena
+                    compañía.</p>
+                <div class="mt-large">
+                    <a href="#ubicacion" class="btn btn-primary">Conoce nuestra ubicación</a>
                 </div>
             </div>
             <div class="story-image" style="position: relative;">
-                <img src="assets/images/orden_familiar.png" id="story-img-1" alt="Familia comiendo barbacoa" style="transition: opacity 1s ease-in-out; width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); object-fit: cover; display: block; opacity: 1;" loading="lazy">
-                <img src="assets/images/mesa_familiar.webp" id="story-img-2" alt="Mesa de barbacoa" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: opacity 1s ease-in-out; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); object-fit: cover; opacity: 0;" loading="lazy">
+                <img src="assets/images/orden_familiar.png" id="story-img-1" alt="Familia comiendo barbacoa"
+                    style="transition: opacity 1s ease-in-out; width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); object-fit: cover; display: block; opacity: 1;"
+                    loading="lazy">
+                <img src="assets/images/mesa_familiar.webp" id="story-img-2" alt="Mesa de barbacoa"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: opacity 1s ease-in-out; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); object-fit: cover; opacity: 0;"
+                    loading="lazy">
             </div>
         </div>
     </section>
@@ -214,6 +258,43 @@
 
             <div class="gallery-grid" id="gallery-grid">
                 <!-- Las 8 mejores imágenes se inyectarán aquí dinámicamente desde js/home-menu.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Reseñas / Autoridad Local -->
+    <section id="resenas" class="section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+                <p class="section-subtitle">Conoce la experiencia de Barbacoa Tatemada El Vale.</p>
+            </div>
+            <!-- Reemplazar estos testimonios por reseñas reales de Google o Facebook cuando estén disponibles. -->
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div class="review-card"
+                    style="background: var(--cream); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <div style="color: var(--accent); font-size: 1.5rem; margin-bottom: 1rem;">★★★★★</div>
+                    <p style="font-style: italic; margin-bottom: 1.5rem;">"Muy buen sabor, la barbacoa está jugosa y el
+                        consomé bien servido."</p>
+                    <strong>- Cliente frecuente</strong>
+                </div>
+                <div class="review-card"
+                    style="background: var(--cream); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <div style="color: var(--accent); font-size: 1.5rem; margin-bottom: 1rem;">★★★★★</div>
+                    <p style="font-style: italic; margin-bottom: 1.5rem;">"Excelente lugar para comer en familia. Muy
+                        buena atención."</p>
+                    <strong>- Familia de Nogales</strong>
+                </div>
+                <div class="review-card"
+                    style="background: var(--cream); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <div style="color: var(--accent); font-size: 1.5rem; margin-bottom: 1rem;">★★★★★</div>
+                    <p style="font-style: italic; margin-bottom: 1.5rem;">"Los tacos y la orden de barbacoa tienen muy
+                        buen sazón."</p>
+                    <strong>- Invitado local</strong>
+                </div>
+            </div>
+            <div class="text-center mt-large">
+                <a href="/sistema-pedidos/" class="btn btn-primary">Ver menú completo</a>
             </div>
         </div>
     </section>
@@ -243,19 +324,59 @@
                         </ul>
                     </div>
 
-                    <a href="https://maps.google.com/?q=Club+Antena+103,+Las+Praderas,+84066+Heroica+Nogales,+Son." target="_blank"
-                        class="btn btn-primary mt-medium">Abrir ubicación en Google Maps</a>
+                    <a href="https://maps.google.com/?q=Club+Antena+103,+Las+Praderas,+84066+Heroica+Nogales,+Son."
+                        target="_blank" class="btn btn-primary mt-medium">Abrir ubicación en Google Maps</a>
                 </div>
                 <div class="location-map">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3409.5041234853093!2d-110.96737470000001!3d31.289808900000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86d1533dcebf7ccd%3A0xcbf29532f484fd79!2sClub%20Antena%20103%2C%20Las%20Praderas%2C%2084066%20Heroica%20Nogales%2C%20Son.!5e0!3m2!1ses!2smx!4v1778641504849!5m2!1ses!2smx" 
-                        width="100%" 
-                        height="100%" 
-                        style="border:0; min-height: 400px;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3409.5041234853093!2d-110.96737470000001!3d31.289808900000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86d1533dcebf7ccd%3A0xcbf29532f484fd79!2sClub%20Antena%20103%2C%20Las%20Praderas%2C%2084066%20Heroica%20Nogales%2C%20Son.!5e0!3m2!1ses!2smx!4v1778641504849!5m2!1ses!2smx"
+                        width="100%" height="100%" style="border:0; min-height: 400px;" allowfullscreen=""
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Información útil antes de ordenar -->
+    <section class="section bg-cream">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Información útil antes de ordenar</h2>
+                <p class="section-subtitle">Todo lo que necesitas saber para disfrutar de nuestra comida mexicana
+                    familiar en Nogales.</p>
+            </div>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <div class="info-card"
+                    style="background: var(--white); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">📍 Dirección</h3>
+                    <p>Club Antena 103, Las Praderas, 84066 Heroica Nogales, Sonora.</p>
+                </div>
+                <div class="info-card"
+                    style="background: var(--white); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">🕒 Horario</h3>
+                    <p>Lun, Jue a Dom: 7:00 am - 11:00 pm<br>
+                        Martes: 7:00 am - 3:00 pm<br>
+                        Miércoles: Cerrado</p>
+                </div>
+                <div class="info-card"
+                    style="background: var(--white); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">📱 Formas de pedido</h3>
+                    <ul style="list-style: disc; margin-left: 1.5rem;">
+                        <li>Pedido en línea</li>
+                        <li>WhatsApp</li>
+                        <li>Para recoger en local</li>
+                    </ul>
+                </div>
+                <div class="info-card"
+                    style="background: var(--white); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">⚠️ Notas importantes</h3>
+                    <ul style="list-style: disc; margin-left: 1.5rem; font-size: 0.9rem; color: #555;">
+                        <li>La disponibilidad de productos puede variar según el día.</li>
+                        <li>Los tiempos de entrega o recolección pueden variar según la demanda.</li>
+                        <li>Tu pedido se confirma por WhatsApp.</li>
+                        <li>Confirma disponibilidad antes de realizar tu pedido.</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -277,8 +398,10 @@
                     Ordenar en Línea
                 </a>
                 <div class="delivery-apps">
-                    <a href="#" class="btn btn-outline bg-white">Buscar en Rappi</a>
-                    <a href="#" class="btn btn-outline bg-white">Buscar en Uber Eats</a>
+                    <a href="#" class="btn btn-outline bg-white" onclick="event.preventDefault();">Próximamente en
+                        Rappi</a>
+                    <a href="#" class="btn btn-outline bg-white" onclick="event.preventDefault();">Próximamente en Uber
+                        Eats</a>
                 </div>
             </div>
         </div>
@@ -290,34 +413,38 @@
             <div class="footer-card">
                 <!-- Tapes -->
                 <svg class="tape tape-left" width="95" height="80" viewBox="0 0 95 80">
-                    <path d="M1 45L70.282 5L88.282 36.1769L19 76.1769L1 45Z" fill="currentColor"/>
+                    <path d="M1 45L70.282 5L88.282 36.1769L19 76.1769L1 45Z" fill="currentColor" />
                 </svg>
                 <svg class="tape tape-right" width="95" height="80" viewBox="0 0 95 80">
-                    <path d="M1 45L70.282 5L88.282 36.1769L19 76.1769L1 45Z" fill="currentColor"/>
+                    <path d="M1 45L70.282 5L88.282 36.1769L19 76.1769L1 45Z" fill="currentColor" />
                 </svg>
-                
+
                 <div class="footer-main">
                     <div class="footer-brand">
                         <a href="#" class="logo">
                             <img src="assets/images/logo.png" alt="Barbacoa El Vale" class="logo-img">
-                            <h3 style="font-family: var(--font-heading); color: var(--neutral); margin: 0; font-size: 1.8rem;">El Vale</h3>
+                            <h3
+                                style="font-family: var(--font-heading); color: var(--neutral); margin: 0; font-size: 1.8rem;">
+                                El Vale</h3>
                         </a>
-                        <p>Barbacoa tatemada tradicional con el sazón único de Tequila, Jalisco. ¡El sabor que Nogales ama!</p>
+                        <p>Barbacoa tatemada tradicional con sabor mexicano, servida con orgullo en Nogales, Sonora.</p>
+                        <a href="https://wa.me/526311052305" target="_blank" class="btn btn-primary"
+                            style="padding: 0.5rem 1rem; margin-top: 0;">Chat WhatsApp</a>
                     </div>
 
                     <div class="footer-column">
                         <h4>Menú</h4>
-                        <div class="footer-links">
+                        <div class="footer-links" style="display: flex; flex-direction: column; gap: 0.5rem;">
                             <a href="#platillos">Especialidades</a>
                             <a href="#platillos">Tacos y Burritos</a>
                             <a href="#platillos">Quesadillas</a>
-                            <div class="badge-soon">Bebidas <span>soon</span></div>
+                            <a href="#platillos">Bebidas</a>
                         </div>
                     </div>
 
                     <div class="footer-column">
                         <h4>Nosotros</h4>
-                        <div class="footer-links">
+                        <div class="footer-links" style="display: flex; flex-direction: column; gap: 0.5rem;">
                             <a href="#historia">Nuestra Historia</a>
                             <a href="#ubicacion">Ubicación</a>
                             <a href="#galeria">Galería</a>
@@ -327,11 +454,19 @@
 
                     <div class="footer-column">
                         <h4>Servicios</h4>
-                        <div class="footer-links">
+                        <div class="footer-links" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <a href="/sistema-pedidos/">Pedido en línea</a>
                             <a href="https://wa.me/526311052305" target="_blank">WhatsApp</a>
-                            <div class="badge-soon">Rappi <span>soon</span></div>
-                            <div class="badge-soon">Uber Eats <span>soon</span></div>
                             <a href="#ubicacion">Para Recoger</a>
+                            <span style="font-size: 0.85rem; color: #888;">Próximamente en plataformas</span>
+                        </div>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Contacto</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+                            <p><strong>WhatsApp:</strong><br>+52 631 105 2305</p>
+                            <p><strong>Ubicación:</strong><br>Club Antena 103, Las Praderas, Nogales, Sonora</p>
                         </div>
                     </div>
                 </div>
@@ -339,21 +474,27 @@
 
             <div class="footer-bottom">
                 <div class="footer-copyright">
-                    <p>© <span id="current-year"></span> Barbacoa Tatemada El Vale. Todos los derechos reservados.</p>
+                    <p>© <span id="current-year">2026</span> Barbacoa Tatemada El Vale. Todos los derechos reservados.
+                    </p>
                 </div>
-                <div class="footer-legal">
-                    <a href="#">Privacidad</a>
-                    <a href="#">Términos</a>
+                <div class="footer-legal" style="display: flex; gap: 1rem;">
+                    <a href="/privacidad.html">Privacidad</a>
+                    <a href="/terminos.html">Términos</a>
                 </div>
                 <div class="footer-socials">
                     <a href="https://wa.me/526311052305" class="social-icon" aria-label="WhatsApp">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"></path>
-                            <path d="M9 10a0.5 .5 0 0 0 1 0v-1a0.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a0.5 .5 0 0 0 0 -1h-1a0.5 .5 0 0 0 0 1"></path>
+                            <path
+                                d="M9 10a0.5 .5 0 0 0 1 0v-1a0.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a0.5 .5 0 0 0 0 -1h-1a0.5 .5 0 0 0 0 1">
+                            </path>
                         </svg>
                     </a>
-                    <a href="https://www.facebook.com/BTEVNogales" class="social-icon" aria-label="Facebook" target="_blank">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <a href="https://www.facebook.com/BTEVNogales" class="social-icon" aria-label="Facebook"
+                        target="_blank">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"></path>
                         </svg>
                     </a>
@@ -381,7 +522,8 @@
     <nav class="interactive-menu" id="mobile-dock">
         <button class="menu__item active" data-target="body">
             <div class="menu__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
@@ -390,7 +532,8 @@
         </button>
         <button class="menu__item" data-target="#platillos">
             <div class="menu__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <line x1="8" y1="6" x2="21" y2="6"></line>
                     <line x1="8" y1="12" x2="21" y2="12"></line>
                     <line x1="8" y1="18" x2="21" y2="18"></line>
@@ -403,7 +546,8 @@
         </button>
         <button class="menu__item" data-target="#galeria">
             <div class="menu__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <circle cx="8.5" cy="8.5" r="1.5"></circle>
                     <polyline points="21 15 16 10 5 21"></polyline>
@@ -413,7 +557,8 @@
         </button>
         <button class="menu__item" data-target="#ubicacion">
             <div class="menu__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                 </svg>
@@ -422,7 +567,8 @@
         </button>
         <button class="menu__item" data-target="whatsapp">
             <div class="menu__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.2h.8"></path>
                     <path d="M3 21l1.65-3.8A9 9 0 1 1 3 21z"></path>
                 </svg>
