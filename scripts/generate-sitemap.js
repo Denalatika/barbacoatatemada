@@ -41,3 +41,19 @@ try {
   console.error('❌ Error al generar el sitemap:', error);
   process.exit(1);
 }
+
+// Copiar og-image.jpg a la raíz si existe en /public
+const ogSrcPath = path.join(__dirname, '..', 'public', 'og-image.jpg');
+const ogDestPath = path.join(__dirname, '..', 'og-image.jpg');
+
+try {
+  if (fs.existsSync(ogSrcPath)) {
+    fs.copyFileSync(ogSrcPath, ogDestPath);
+    console.log(`✅ Imagen Open Graph copiada a la raíz con éxito en: ${ogDestPath}`);
+  } else {
+    console.warn(`⚠️ No se encontró la imagen en: ${ogSrcPath}`);
+  }
+} catch (error) {
+  console.error('❌ Error al copiar la imagen Open Graph:', error);
+  process.exit(1);
+}
