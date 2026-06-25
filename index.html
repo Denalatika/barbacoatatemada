@@ -10,13 +10,21 @@
     <meta name="keywords"
         content="barbacoa en Nogales, Barbacoa Tatemada El Vale, tacos de barbacoa Nogales, sopes de barbacoa, consomé de barbacoa en Nogales, comida mexicana familiar en Nogales, restaurante de barbacoa en Nogales">
     <meta name="google-site-verification" content="EL5tCZuSs_V-g3mUo-Vi8K0ZTwDZpk7cgXkTWVGt1UM" />
+    <link rel="canonical" href="https://barbacoatatemada.vercel.app/" />
 
     <!-- Open Graph for Social Media -->
     <meta property="og:title" content="Barbacoa Tatemada El Vale | Sabor Tradicional">
     <meta property="og:description"
         content="Ven por ese antojo que no se quita: barbacoa tatemada, consomé calientito y sabor tradicional en Nogales.">
-    <meta property="og:image" content="assets/images/hero_barbacoa.png">
+    <meta property="og:image" content="https://barbacoatatemada.vercel.app/assets/images/hero_barbacoa.png">
+    <meta property="og:url" content="https://barbacoatatemada.vercel.app/" />
     <meta property="og:type" content="restaurant">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Barbacoa Tatemada El Vale | Barbacoa tradicional en Nogales, Sonora">
+    <meta name="twitter:description" content="Disfruta de la mejor barbacoa tatemada en Nogales, Sonora. Tacos, sopes, consomé calientito y un ambiente familiar. Pedidos por WhatsApp, servicio a domicilio y para recoger.">
+    <meta name="twitter:image" content="https://barbacoatatemada.vercel.app/assets/images/hero_barbacoa.png">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,9 +45,11 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Restaurant",
+      "@type": ["Restaurant", "LocalBusiness"],
       "name": "Barbacoa Tatemada El Vale",
-      "image": "assets/images/hero_barbacoa.png",
+      "image": "https://barbacoatatemada.vercel.app/assets/images/hero_barbacoa.png",
+      "logo": "https://barbacoatatemada.vercel.app/assets/images/logo.png",
+      "description": "Disfruta de la mejor barbacoa tatemada en Nogales, Sonora. Tacos, sopes, consomé calientito y un ambiente familiar.",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Club Antena 103, Las Praderas",
@@ -48,15 +58,34 @@
         "postalCode": "84066",
         "addressCountry": "MX"
       },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 31.3012,
+        "longitude": -110.9381
+      },
       "telephone": "+526311052305",
-      "servesCuisine": "Mexican",
+      "servesCuisine": ["Mexican", "Tacos", "Barbacoa"],
       "priceRange": "$$",
-      "url": "http://localhost:5173",
-      "hasMenu": "http://localhost:5173/#platillos",
-      "openingHours": "Mo 07:00-23:00, Tu 07:00-15:00, Th,Fr,Sa,Su 07:00-23:00",
+      "url": "https://barbacoatatemada.vercel.app/",
+      "hasMenu": "https://barbacoatatemada.vercel.app/sistema-pedidos/",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "07:00",
+          "closes": "23:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Tuesday",
+          "opens": "07:00",
+          "closes": "15:00"
+        }
+      ],
       "sameAs": [
         "https://www.facebook.com/BTEVNogales"
-      ]
+      ],
+      "acceptsReservations": "false"
     }
     </script>
 </head>

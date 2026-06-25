@@ -1,0 +1,15 @@
+{
+  "name": "barbacoa-tatemada-el-vale",
+  "version": "1.0.0",
+  "description": "Sitio web para Barbacoa Tatemada El Vale en Nogales, Sonora.",
+  "scripts": {
+    "build": "node scripts/generate-sitemap.js"
+  },
+  "keywords": [
+    "barbacoa",
+    "nogales",
+    "tacos"
+  ],
+  "author": "",
+  "license": "ISC"
+}

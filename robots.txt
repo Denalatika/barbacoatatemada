@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /sistema-pedidos/admin.html
+
+Sitemap: https://barbacoatatemada.vercel.app/sitemap.xml
