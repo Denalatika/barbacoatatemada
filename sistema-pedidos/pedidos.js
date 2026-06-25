@@ -122,10 +122,8 @@ function setupListeners() {
             const addressField = document.getElementById('address-field');
             if (e.target.value === 'A domicilio') {
                 addressField.classList.add('visible');
-                document.getElementById('address').setAttribute('required', 'true');
             } else {
                 addressField.classList.remove('visible');
-                document.getElementById('address').removeAttribute('required');
             }
             updateOrderSummary();
             updateStepIndicator();
@@ -974,16 +972,6 @@ function validateOrderForm() {
         return false;
     }
     
-    const deliveryType = deliveryTypeInput.value;
-    if (deliveryType === 'A domicilio') {
-        const address = document.getElementById('address').value.trim();
-        if (!address) {
-            showToast('Para pedidos a domicilio necesitamos tu dirección.');
-            document.getElementById('address').focus();
-            return false;
-        }
-    }
-    
     const paymentMethodInput = document.querySelector('input[name="payment_method"]:checked');
     if (!paymentMethodInput) {
         showToast('Selecciona tu método de pago.');
@@ -1008,7 +996,7 @@ function buildWhatsAppMessage() {
     const phone = document.getElementById('customer_phone').value.trim();
     const dob = document.getElementById('customer_dob').value.trim() || 'No proporcionada';
     const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
-    const address = deliveryType === 'A domicilio' ? document.getElementById('address').value.trim() : 'N/A (Para recoger)';
+    const address = deliveryType === 'A domicilio' ? 'Se compartirá ubicación actual por WhatsApp' : 'N/A (Para recoger)';
     const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
     
     let transferStatus = 'N/A';
@@ -1246,11 +1234,6 @@ function updateStepIndicator() {
     let isStep2Complete = name && phone && deliveryTypeInput && paymentMethodInput;
     
     if (isStep2Complete) {
-        // Validación adicional si es a domicilio
-        if (deliveryTypeInput.value === 'A domicilio') {
-            const address = document.getElementById('address').value.trim();
-            if (!address) isStep2Complete = false;
-        }
         // Validación adicional si es transferencia
         if (paymentMethodInput.value === 'Transferencia') {
             const transferStatusInput = document.querySelector('input[name="transfer_status"]:checked');
@@ -1315,7 +1298,7 @@ function saveCustomerForFutureDatabase() {
         const phone = document.getElementById('customer_phone').value.trim();
         const dob = document.getElementById('customer_dob').value.trim() || 'No proporcionada';
         const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
-        const address = deliveryType === 'A domicilio' ? document.getElementById('address').value.trim() : 'N/A (Para recoger)';
+        const address = deliveryType === 'A domicilio' ? 'Se compartirá ubicación por WhatsApp' : 'N/A (Para recoger)';
         const locationLink = 'No proporcionado';
         const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
         
@@ -1390,7 +1373,8 @@ function saveCustomerProfileLocal() {
         const deliveryTypeInput = document.querySelector('input[name="delivery_type"]:checked');
         const deliveryType = deliveryTypeInput ? deliveryTypeInput.value : '';
         
-        const address = document.getElementById('address').value.trim();
+        const addressElement = document.getElementById('address');
+        const address = addressElement ? addressElement.value.trim() : '';
         
         const paymentMethodInput = document.querySelector('input[name="payment_method"]:checked');
         const paymentMethod = paymentMethodInput ? paymentMethodInput.value : '';
@@ -1427,7 +1411,9 @@ function loadCustomerProfileLocal() {
         if (profile.name) document.getElementById('customer_name').value = profile.name;
         if (profile.phone) document.getElementById('customer_phone').value = profile.phone;
         if (profile.dob) document.getElementById('customer_dob').value = profile.dob;
-        if (profile.address) document.getElementById('address').value = profile.address;
+        
+        const addressElement = document.getElementById('address');
+        if (profile.address && addressElement) addressElement.value = profile.address;
         
         // Auto-seleccionar Tipo de Entrega
         if (profile.delivery_type) {

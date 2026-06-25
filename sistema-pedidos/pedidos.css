@@ -739,6 +739,35 @@ textarea.form-control {
     margin: 0;
 }
 
+/* Caja de aviso para envío a domicilio */
+.delivery-notice-box {
+    background-color: var(--cream);
+    border: 1px dashed var(--burnt-orange);
+    border-radius: var(--radius-sm);
+    padding: 1.2rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0.8rem;
+    color: var(--dark-brown);
+    box-shadow: var(--shadow-sm);
+    animation: fadeIn 0.3s ease;
+}
+
+.delivery-notice-box .notice-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+    color: var(--burnt-orange);
+    margin-bottom: 0.5rem;
+}
+
+.delivery-notice-box .notice-text {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
 .bank-clabe-val {
     font-family: monospace;
     font-size: 0.95rem;

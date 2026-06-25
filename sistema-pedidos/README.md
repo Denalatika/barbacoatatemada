@@ -59,7 +59,7 @@ Antes de anunciar de manera oficial la disponibilidad del sistema de pedidos en 
 
 ### 📝 3. Pruebas de Formulario y Validación
 *   [ ] **Validación de campos vacíos**: Deja los campos vacíos e intenta presionar "Enviar pedido". El sistema debe mostrar una alerta flotante amigable pidiendo rellenar los datos.
-*   [ ] **Validación Condicional (Dirección)**: Selecciona "Para recoger" y confirma que el campo "Dirección de entrega" permanece oculto. Luego selecciona "A domicilio" y verifica que el campo aparezca con animación fluida y sea obligatorio.
+*   [ ] **Aviso Condicional (Dirección)**: Selecciona "Para recoger" y confirma que el aviso de ubicación permanece oculto. Luego selecciona "A domicilio" y verifica que aparezca la caja de aviso (`.delivery-notice-box`) con animación fluida explicando que se solicitará la ubicación en tiempo real.
 *   [ ] **Validación Condicional (Transferencia)**: Selecciona "Efectivo" de pago y confirma que el estado de transferencia esté oculto. Selecciona "Transferencia" y verifica que aparezca el selector obligatorio para indicar si ya se realizó o se realizará la transferencia.
 
 ### 💬 4. Pruebas de Conexión con WhatsApp
