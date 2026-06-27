@@ -153,8 +153,9 @@ ul {
 }
 
 .section-subtitle {
-    font-size: 1.25rem;
-    color: #666;
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    color: #555;
     max-width: 600px;
     margin: 0 auto;
 }
@@ -300,8 +301,9 @@ ul {
 }
 
 .hero-diced-subtitle {
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 400;
     margin-bottom: 0.5rem;
     display: block;
     color: var(--cream);
@@ -722,6 +724,8 @@ ul {
     justify-content: space-between;
     padding: 0.5rem 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
 }
 
 .schedule-list li.closed {
@@ -962,6 +966,13 @@ ul {
 
 .floating-wa:hover {
     transform: scale(1.1);
+}
+
+.review-card strong {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    color: var(--primary);
+    font-weight: 400;
 }
 
 /* Responsive */
