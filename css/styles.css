@@ -166,7 +166,9 @@ ul {
     justify-content: center;
     padding: 0.75rem 1.5rem;
     border-radius: var(--radius-sm);
-    font-weight: 600;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 400;
     cursor: pointer;
     border: none;
     gap: 0.5rem;
@@ -258,7 +260,9 @@ ul {
 }
 
 .nav-link {
-    font-weight: 500;
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 400;
     color: var(--dark);
 }
 
@@ -506,14 +510,15 @@ ul {
 }
 
 .card-price {
-    font-family: var(--font-body);
-    font-weight: 700;
+    font-family: var(--font-heading);
+    font-weight: 400;
     color: var(--secondary);
-    font-size: 1.25rem;
+    font-size: 1.35rem;
 }
 
 .card-title {
-    font-size: 1.5rem;
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
     color: var(--primary);
     margin-bottom: 0;
 }
@@ -827,11 +832,10 @@ ul {
 }
 
 .footer-column h4 {
+    font-family: var(--font-heading);
     color: var(--primary);
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
+    font-size: 1.25rem;
+    font-weight: 400;
     margin-bottom: 1.5rem;
 }
 
