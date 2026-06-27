@@ -111,11 +111,11 @@ ul {
 }
 
 .text-white {
-    color: var(--white);
+    color: var(--white) !important;
 }
 
 .text-light {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .text-large {
@@ -526,7 +526,7 @@ ul {
 
 /* Promo Banner */
 .promo-banner {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
+    background: linear-gradient(135deg, var(--primary), #923C22);
     border-radius: var(--radius-md);
     padding: 2rem;
     color: var(--white);
@@ -540,12 +540,23 @@ ul {
     margin-bottom: 0.5rem;
 }
 
+.promo-banner p {
+    color: var(--white);
+    max-width: 65ch;
+    margin: 0 auto;
+    font-size: 1.1rem;
+}
+
 /* Story Section */
 .story-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: center;
+}
+
+.story-content p {
+    max-width: 65ch;
 }
 
 .feature {
@@ -678,10 +689,22 @@ ul {
 }
 
 .schedule-card {
+    position: relative;
     background: var(--cream);
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
     border-radius: var(--radius-sm);
-    border-left: 4px solid var(--primary);
+}
+
+.schedule-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background-color: var(--primary);
+    border-top-left-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--radius-sm);
 }
 
 .schedule-card h3 {

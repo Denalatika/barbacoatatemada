@@ -163,19 +163,19 @@ a {
 
 .hero-cta {
     display: inline-block;
-    background: linear-gradient(to right, var(--warm-orange), var(--burnt-orange));
-    color: var(--white);
+    background: linear-gradient(to right, var(--gold), var(--warm-orange));
+    color: var(--dark-brown);
     padding: 0.8rem 2rem;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: var(--radius-md);
-    box-shadow: 0 4px 15px rgba(217, 130, 43, 0.4);
+    box-shadow: 0 4px 15px rgba(244, 195, 106, 0.3);
     transition: all 0.2s ease;
 }
 
 .hero-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(217, 130, 43, 0.5);
+    box-shadow: 0 6px 20px rgba(244, 195, 106, 0.4);
 }
 
 /* Indicador de Pasos */
@@ -404,7 +404,20 @@ a {
 }
 
 .product-card.popular {
-    border-right: 3px solid var(--gold);
+    /* No border-right directly to prevent curved bracket border effect */
+}
+
+.product-card.popular::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gold);
+    border-top-right-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
+    z-index: 3;
 }
 
 .product-info {
@@ -845,7 +858,7 @@ textarea.form-control {
 /* Botón Final WhatsApp */
 .btn-submit-order {
     width: 100%;
-    background: linear-gradient(to right, #25D366, #128C7E);
+    background: linear-gradient(to right, #1B8A4C, #0F512B);
     color: var(--white);
     border: none;
     padding: 1rem 1.5rem;
@@ -857,13 +870,13 @@ textarea.form-control {
     align-items: center;
     justify-content: center;
     gap: 0.6rem;
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.35);
+    box-shadow: 0 4px 15px rgba(27, 138, 76, 0.3);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-submit-order:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
+    box-shadow: 0 6px 20px rgba(27, 138, 76, 0.4);
 }
 
 .btn-submit-order:active {
@@ -918,14 +931,14 @@ textarea.form-control {
     height: 34px;
     border-radius: 50%;
     background-color: var(--cream);
-    color: var(--burnt-orange);
+    color: #923C22;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 0.95rem;
     flex-shrink: 0;
-    border: 1px solid rgba(184, 92, 44, 0.25);
+    border: 1px solid rgba(184, 92, 44, 0.4);
     transition: all 0.2s ease;
 }
 
@@ -997,7 +1010,8 @@ textarea.form-control {
     font-size: 0.95rem;
     color: var(--cream);
     opacity: 0.85;
-    margin-bottom: 1.5rem;
+    max-width: 60ch;
+    margin: 0 auto 1.5rem;
 }
 
 .footer-contact {

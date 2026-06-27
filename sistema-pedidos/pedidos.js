@@ -443,8 +443,13 @@ function openMeatSelectModal(productId) {
     currentAddingProductId = productId;
     
     const productNameEl = document.getElementById('meat-select-product-name');
+    const prefixEl = document.getElementById('meat-select-prefix');
     if (productNameEl) {
         productNameEl.textContent = product.name;
+    }
+    if (prefixEl) {
+        const isPlural = product.name.trim().toLowerCase().endsWith('s');
+        prefixEl.textContent = isPlural ? 'Selecciona la carne para tus' : 'Selecciona la carne para tu';
     }
     
     // Resetear a Barbacoa seleccionado por defecto
