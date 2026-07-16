@@ -1191,10 +1191,11 @@ function updateOrderSummary() {
     // Actualizar caja de información de transferencia si existe
     const transferInfoBox = document.getElementById('transfer-info-box');
     if (transferInfoBox) {
-        const bankName = localStorage.getItem('valetatemada_bank_name') || 'BBVA';
-        const bankClabe = localStorage.getItem('valetatemada_bank_clabe') || '0123 4567 8901 2345 67';
-        const bankHolder = localStorage.getItem('valetatemada_bank_holder') || 'Barbacoa Tatemada El Vale';
-        const bankNotes = localStorage.getItem('valetatemada_bank_notes') || 'Por favor envía tu comprobante de pago por este medio.';
+        const hasGlobalBankData = typeof BANK_DATA !== 'undefined' && BANK_DATA !== null;
+        const bankName = (hasGlobalBankData ? BANK_DATA.bankName : null) || localStorage.getItem('valetatemada_bank_name') || 'BBVA';
+        const bankClabe = (hasGlobalBankData ? BANK_DATA.bankClabe : null) || localStorage.getItem('valetatemada_bank_clabe') || '0123 4567 8901 2345 67';
+        const bankHolder = (hasGlobalBankData ? BANK_DATA.bankHolder : null) || localStorage.getItem('valetatemada_bank_holder') || 'Barbacoa Tatemada El Vale';
+        const bankNotes = (hasGlobalBankData ? BANK_DATA.bankNotes : null) || localStorage.getItem('valetatemada_bank_notes') || 'Por favor envía tu comprobante de pago por este medio.';
         
         transferInfoBox.innerHTML = `
             <p style="margin-bottom: 0.6rem; font-weight: 600; color: var(--dark-brown);">Realiza tu transferencia a los siguientes datos:</p>

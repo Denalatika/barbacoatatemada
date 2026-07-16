@@ -154,6 +154,13 @@ const MENU_DATA = [
   }
 ];
 
+const BANK_DATA = {
+  "bankName": "BBVA",
+  "bankClabe": "012778004812529846",
+  "bankHolder": "Felix Martin Lopez Alvarez",
+  "bankNotes": "Por favor envía tu comprobante de pago por este medio."
+};
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = MENU_DATA;
+  module.exports = { MENU_DATA, BANK_DATA };
 }

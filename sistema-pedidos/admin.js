@@ -522,12 +522,22 @@ window.publishMenuToWeb = async function (btnElement) {
     btnElement.style.opacity = "0.7";
 
     try {
+        const payload = {
+            menu: currentMenu,
+            bank: {
+                bankName: localStorage.getItem('valetatemada_bank_name') || 'BBVA',
+                bankClabe: localStorage.getItem('valetatemada_bank_clabe') || '0123 4567 8901 2345 67',
+                bankHolder: localStorage.getItem('valetatemada_bank_holder') || 'Barbacoa Tatemada El Vale',
+                bankNotes: localStorage.getItem('valetatemada_bank_notes') || 'Por favor envía tu comprobante de pago por este medio.'
+            }
+        };
+
         const response = await fetch('/api/save-menu', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(currentMenu)
+            body: JSON.stringify(payload)
         });
 
         const data = await response.json();
@@ -585,14 +595,28 @@ function updateStats() {
 function generateExportCode() {
     if (!menuCodeBlock) return;
 
+    const bankName = localStorage.getItem('valetatemada_bank_name') || 'BBVA';
+    const bankClabe = localStorage.getItem('valetatemada_bank_clabe') || '0123 4567 8901 2345 67';
+    const bankHolder = localStorage.getItem('valetatemada_bank_holder') || 'Barbacoa Tatemada El Vale';
+    const bankNotes = localStorage.getItem('valetatemada_bank_notes') || 'Por favor envía tu comprobante de pago por este medio.';
+
     const formattedJson = JSON.stringify(currentMenu, null, 2);
+    const formattedBankJson = JSON.stringify({
+        bankName,
+        bankClabe,
+        bankHolder,
+        bankNotes
+    }, null, 2);
+
     const fullJsCode = `// Datos del menú oficial para el Sistema de Pedidos - Barbacoa Tatemada El Vale
 // Generado automáticamente desde el Panel Administrativo
 
 const MENU_DATA = ${formattedJson};
 
+const BANK_DATA = ${formattedBankJson};
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = MENU_DATA;
+  module.exports = { MENU_DATA, BANK_DATA };
 }
 `;
     menuCodeBlock.textContent = fullJsCode;
@@ -676,10 +700,11 @@ function showToast(message) {
 
 // Cargar configuración de datos bancarios
 function loadBankDetails() {
-    const bankName = localStorage.getItem('valetatemada_bank_name') || 'BBVA';
-    const bankClabe = localStorage.getItem('valetatemada_bank_clabe') || '0123 4567 8901 2345 67';
-    const bankHolder = localStorage.getItem('valetatemada_bank_holder') || 'Barbacoa Tatemada El Vale';
-    const bankNotes = localStorage.getItem('valetatemada_bank_notes') || 'Por favor envía tu comprobante de pago por este medio.';
+    const hasGlobalBankData = typeof BANK_DATA !== 'undefined' && BANK_DATA !== null;
+    const bankName = (hasGlobalBankData ? BANK_DATA.bankName : null) || localStorage.getItem('valetatemada_bank_name') || 'BBVA';
+    const bankClabe = (hasGlobalBankData ? BANK_DATA.bankClabe : null) || localStorage.getItem('valetatemada_bank_clabe') || '0123 4567 8901 2345 67';
+    const bankHolder = (hasGlobalBankData ? BANK_DATA.bankHolder : null) || localStorage.getItem('valetatemada_bank_holder') || 'Barbacoa Tatemada El Vale';
+    const bankNotes = (hasGlobalBankData ? BANK_DATA.bankNotes : null) || localStorage.getItem('valetatemada_bank_notes') || 'Por favor envía tu comprobante de pago por este medio.';
 
     const inputName = document.getElementById('bank_name');
     const inputClabe = document.getElementById('bank_clabe');
@@ -693,7 +718,7 @@ function loadBankDetails() {
 }
 
 // Guardar configuración de datos bancarios
-window.saveBankDetails = function () {
+window.saveBankDetails = async function (btnElement) {
     const bankNameInput = document.getElementById('bank_name');
     const bankClabeInput = document.getElementById('bank_clabe');
     const bankHolderInput = document.getElementById('bank_holder');
@@ -714,7 +739,89 @@ window.saveBankDetails = function () {
     localStorage.setItem('valetatemada_bank_holder', bankHolder);
     localStorage.setItem('valetatemada_bank_notes', bankNotes);
 
-    showToast('✅ ¡Datos bancarios guardados con éxito!');
+    // Actualizar variable global en memoria
+    if (typeof BANK_DATA !== 'undefined' && BANK_DATA !== null) {
+        BANK_DATA.bankName = bankName;
+        BANK_DATA.bankClabe = bankClabe;
+        BANK_DATA.bankHolder = bankHolder;
+        BANK_DATA.bankNotes = bankNotes;
+    } else {
+        window.BANK_DATA = {
+            bankName,
+            bankClabe,
+            bankHolder,
+            bankNotes
+        };
+    }
+
+    // Comprobar si estamos en modo local
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    if (isLocalhost) {
+        showToast("💾 Guardado local exitoso. (Nota: La subida automática a Github requiere estar alojado en Vercel)");
+        return;
+    }
+
+    // Iniciar proceso de subida
+    let originalText = "";
+    if (btnElement) {
+        originalText = btnElement.innerHTML;
+        btnElement.innerHTML = "⏳ Publicando datos bancarios...";
+        btnElement.disabled = true;
+        btnElement.style.opacity = "0.7";
+    }
+
+    try {
+        const payload = {
+            menu: currentMenu,
+            bank: {
+                bankName,
+                bankClabe,
+                bankHolder,
+                bankNotes
+            }
+        };
+
+        const response = await fetch('/api/save-menu', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast("🚀 ¡Datos bancarios actualizados en la web! Los cambios serán visibles en ~30 segundos.");
+            if (btnElement) {
+                btnElement.style.backgroundColor = "var(--green-success)";
+                btnElement.innerHTML = "✅ Publicado Correctamente";
+                setTimeout(() => {
+                    btnElement.style.backgroundColor = "";
+                    btnElement.innerHTML = originalText;
+                    btnElement.disabled = false;
+                    btnElement.style.opacity = "1";
+                }, 3000);
+            }
+        } else {
+            console.error("Error API:", data);
+            showToast("❌ Error al publicar: " + (data.error || "Desconocido"));
+            if (btnElement) {
+                btnElement.innerHTML = "❌ Error al publicar";
+                btnElement.disabled = false;
+                btnElement.style.opacity = "1";
+            }
+        }
+    } catch (error) {
+        console.error("Error de conexión:", error);
+        showToast("❌ Error de red al intentar publicar.");
+        if (btnElement) {
+            btnElement.innerHTML = "❌ Error de conexión";
+            btnElement.disabled = false;
+            btnElement.style.opacity = "1";
+        }
+    }
 };
 
 // ==========================================

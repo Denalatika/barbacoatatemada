@@ -26,20 +26,41 @@ export default async function handler(req, res) {
     }
 
     // 2. Extraer los datos del menú enviados desde el frontend
-    const menuDataArray = req.body;
-    if (!Array.isArray(menuDataArray)) {
-      return res.status(400).json({ error: 'El cuerpo de la petición debe ser un arreglo JSON.' });
+    const requestBody = req.body;
+    let menuDataArray = [];
+    let bankData = null;
+
+    if (Array.isArray(requestBody)) {
+      menuDataArray = requestBody;
+    } else if (requestBody && typeof requestBody === 'object') {
+      menuDataArray = requestBody.menu || [];
+      bankData = requestBody.bank || null;
+    } else {
+      return res.status(400).json({ error: 'El cuerpo de la petición debe ser un arreglo o un objeto JSON válido.' });
     }
 
     // 3. Formatear el contenido de la misma forma que el archivo original menu-data.js
-    const formattedJson = JSON.stringify(menuDataArray, null, 2);
+    const formattedMenuJson = JSON.stringify(menuDataArray, null, 2);
+    
+    // Si no viene bankData, usamos los valores por defecto
+    const defaultBankData = {
+      bankName: "BBVA",
+      bankClabe: "012778004812529846",
+      bankHolder: "Felix Martin Lopez Alvarez",
+      bankNotes: "Por favor envía tu comprobante de pago por este medio."
+    };
+    const finalBankData = bankData || defaultBankData;
+    const formattedBankJson = JSON.stringify(finalBankData, null, 2);
+
     const fileContent = `// Datos del menú oficial para el Sistema de Pedidos - Barbacoa Tatemada El Vale
 // Generado automáticamente desde el Panel Administrativo (Vercel API)
 
-const MENU_DATA = ${formattedJson};
+const MENU_DATA = ${formattedMenuJson};
+
+const BANK_DATA = ${formattedBankJson};
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = MENU_DATA;
+  module.exports = { MENU_DATA, BANK_DATA };
 }
 `;
 
