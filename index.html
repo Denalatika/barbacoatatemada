@@ -79,7 +79,7 @@
         },
         {
           "@type": "OpeningHoursSpecification",
-          "dayOfWeek": "Tuesday",
+          "dayOfWeek": ["Tuesday", "Wednesday"],
           "opens": "07:00",
           "closes": "15:00"
         }
@@ -350,10 +350,13 @@
                     <div class="schedule-card">
                         <h3>Horario de atención</h3>
                         <ul class="schedule-list">
-                            <li><span>Lun, Jue a Dom</span> <span>7:00 am - 11:00 pm</span></li>
-                            <li><span>Martes</span> <span>7:00 am - 3:00 pm</span></li>
-                            <li class="closed"><span>Miércoles</span> <span>CERRADO</span></li>
+                            <li><span>Jueves a Lunes</span> <span>7:00 am - 11:00 pm</span></li>
+                            <li><span>Martes y Miércoles</span> <span>7:00 am - 3:00 pm</span></li>
                         </ul>
+                        <div style="margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px dashed rgba(0,0,0,0.12); display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;">
+                            <span style="color: var(--primary); font-weight: 600;">🛵 Servicio a domicilio:</span>
+                            <span style="color: var(--dark); font-weight: 600;">7:30 am - 9:30 pm</span>
+                        </div>
                     </div>
 
                     <a href="https://maps.google.com/?q=Club+Antena+103,+Las+Praderas,+84066+Heroica+Nogales,+Son."
@@ -387,9 +390,9 @@
                 <div class="info-card"
                     style="background: var(--white); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
                     <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">🕒 Horario</h3>
-                    <p>Lun, Jue a Dom: 7:00 am - 11:00 pm<br>
-                        Martes: 7:00 am - 3:00 pm<br>
-                        Miércoles: Cerrado</p>
+                    <p>Jueves a Lunes: 7:00 am - 11:00 pm<br>
+                        Martes y Miércoles: 7:00 am - 3:00 pm<br>
+                        <span style="color: var(--primary); font-weight: 600;">🛵 Domicilio: 7:30 am - 9:30 pm</span></p>
                 </div>
                 <div class="info-card"
                     style="background: var(--white); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
