@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITE_URL = 'https://barbacoatatemada.vercel.app';
+const SITE_URL = 'https://barbacoatatemada.com';
 const currentDate = new Date().toISOString().split('T')[0];
 
 const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
