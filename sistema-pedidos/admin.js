@@ -839,8 +839,8 @@ window.handleLogin = function (event) {
     const username = userEl.value.trim();
     const password = passEl.value;
 
-    // Credenciales requeridas: barbacoa / tatemada
-    if (username === 'barbacoa' && password === 'tatemada') {
+    // Credenciales requeridas: barbacoatatemada / barbacoatatemada2026
+    if (username === 'barbacoatatemada' && password === 'barbacoatatemada2026') {
         if (errorEl) errorEl.style.display = 'none';
         localStorage.setItem('valetatemada_admin_logged_in', 'true');
         document.body.classList.add('admin-logged-in');
